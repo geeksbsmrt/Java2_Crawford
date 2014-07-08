@@ -2,5 +2,11 @@
 <resources>
 
     <string name="app_name">Service</string>
+    <string name="realmSelect">Realm: </string>
+    <string name="guildName">Guild: </string>
+    <string name="submitButton">Get Characters</string>
+    <string name="notConnected">Active Internet connection required.</string>
+    <string name="noEntry">Please enter a guild name</string>
+    <string name="notFound">Guild not found on selected server.</string>
 
 </resources>

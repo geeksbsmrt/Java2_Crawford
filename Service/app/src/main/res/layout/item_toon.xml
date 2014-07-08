@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toonImg"
+        android:src="@drawable/test"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="toonName"
+        android:id="@+id/toonName"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/toonImg"
+        android:layout_alignParentEnd="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="toonLevel"
+        android:id="@+id/toonLevel"
+        android:layout_toRightOf="@+id/toonImg"
+        android:layout_below="@+id/toonName"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="toonClass"
+        android:id="@+id/toonClass"
+        android:layout_alignTop="@+id/toonLevel"
+        android:layout_toRightOf="@+id/toonLevel"
+        android:layout_below="@+id/toonName"/>
+
+</RelativeLayout>
