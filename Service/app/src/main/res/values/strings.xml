@@ -8,5 +8,8 @@
     <string name="notConnected">Active Internet connection required.</string>
     <string name="noEntry">Please enter a guild name</string>
     <string name="notFound">Guild not found on selected server.</string>
+    <string name="toonName">toonName</string>
+    <string name="toonLevel">toonLevel</string>
+    <string name="toonClass">toonClass</string>
 
 </resources>
