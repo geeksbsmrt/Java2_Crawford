@@ -12,8 +12,8 @@ import android.content.Intent;
  */
 public class SyncService extends IntentService {
 
-    public SyncService(String name) {
-        super(name);
+    public SyncService() {
+        super("SyncService");
     }
 
     @Override
