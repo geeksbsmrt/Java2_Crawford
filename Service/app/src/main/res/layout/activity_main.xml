@@ -10,20 +10,39 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/realmSelect"
+        android:id="@+id/appDesc"
         android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="@string/appDesc"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/realmDesc"
+        android:layout_below="@+id/appDesc"
+        android:gravity="center"
+        android:text="@string/relDesc"
+        android:layout_marginBottom="10dp"
+        android:textColor="#ffff0600" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/realmSelect"
         android:layout_alignBottom="@+id/realmSpinner"
+        android:layout_below="@+id/realmDesc"
         android:gravity="center"
         android:text="@string/realmSelect"
         android:layout_marginRight="10dp"/>
 
-    <Spinner
+    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/realmSpinner"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/realmDesc"
         android:layout_toRightOf="@+id/realmSelect"
+        android:text="@string/realm"
         />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

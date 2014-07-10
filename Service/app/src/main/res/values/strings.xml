@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Service</string>
+    <string name="app_name">WoW Guild Members</string>
     <string name="realmSelect">Realm: </string>
     <string name="guildName">Guild: </string>
-    <string name="submitButton">Get Characters</string>
-    <string name="notConnected">Active Internet connection required.</string>
+    <string name="submitButton">Get Members</string>
+    <string name="notConnected">Active Internet connection required for latest information.</string>
     <string name="noEntry">Please enter a guild name</string>
     <string name="notFound">Guild not found on selected server.</string>
     <string name="toonName">toonName</string>
     <string name="toonLevel">toonLevel</string>
     <string name="toonClass">toonClass</string>
+    <string name="relDesc">A static realm will be used for this assignment.</string>
+    <string name="appDesc">This application queries the World of Warcraft database for the members of the selected guild.</string>
+    <string name="realm">Llane</string>
 
 </resources>
