@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.adamcrawford.service.data.CharSync;
 import com.adamcrawford.service.toon.ToonAdapter;
 import com.adamcrawford.service.toon.ToonConstructor;
 
@@ -20,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends Activity {
@@ -52,7 +54,7 @@ public class MainActivity extends Activity {
 
                     //pull entered user text
                     //String guild = guildName.getText().toString().replace(" ", "%20");
-                    String guild = "Remnants of Sanity";
+                    String guild = "Remnants%20of%20Sanity";
 
                     //ensure entry in guildEdit
                     if (! guild.equals("")) {
@@ -88,12 +90,13 @@ public class MainActivity extends Activity {
     private void updateList (String realm, String guild) {
 
         //call class to connect to network and pull info based on realm selection and input guild
-        //JSONObject toons = new CharSync().execute(realm, guild).get();
         //TODO Use this to get information from local file
         JSONObject toons = null;
         try {
-            toons = new JSONObject().put("char1","toonName");
-        } catch (JSONException e) {
+            toons = new CharSync().execute(guild).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
         //check for data inside JSON object
@@ -113,7 +116,7 @@ public class MainActivity extends Activity {
     //method to output values to list
     private void writeList (JSONObject data) {
 
-        //System.out.println(data.toString());
+       Log.i("Write List Data: ",data.toString());
 
         //create string array
         ArrayList<ToonConstructor> toonNames = new ArrayList<ToonConstructor>();
@@ -123,16 +126,21 @@ public class MainActivity extends Activity {
             //get members array out of returned JSON object
             JSONArray dataArray = data.getJSONArray("members");
 
+            Log.i("DataArray Members: ", dataArray.toString());
             //loop through array putting member names into string array
             for (int i=0, j=dataArray.length(); i<j; i++) {
                 JSONObject toon = (JSONObject) dataArray.get(i);
+                //Log.i("Looping Toons: ", toon.toString());
                 //toonNames.add(toon.getJSONObject("character").getString("name"));
                 ToonConstructor tc = new ToonConstructor(toon);
                 toonNames.add(tc);
             }
 
+            Log.i("ToonNames: ", toonNames.toString());
+
             //build listAdapter
             ToonAdapter guildListAdapter = new ToonAdapter(this, R.id.charList, toonNames);
+
             //refresh the data
             guildListAdapter.notifyDataSetChanged();
             charList.setAdapter(guildListAdapter);
@@ -147,7 +155,7 @@ public class MainActivity extends Activity {
     }
 
     //method to display error to user
-    private void printToast(String message) {
+    public void printToast(String message) {
         //get active context
         Context c = getApplicationContext();
         //set length for message to be displayed
