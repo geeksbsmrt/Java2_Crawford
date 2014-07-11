@@ -31,7 +31,13 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-
+/**
+ * Author:  Adam Crawford
+ * Project: Service
+ * Package: com.adamcrawford.service
+ * File:    MainActivity
+ * Purpose: Controls application including UI, OnClick Functionality, Network Connectivity, and message handling.
+ */
 
 public class MainActivity extends Activity {
 

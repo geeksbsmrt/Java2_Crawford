@@ -5,7 +5,7 @@ package com.adamcrawford.service.toon;
  * Project: Service
  * Package: com.adamcrawford.service.toon
  * File:    ToonConstructor
- * Purpose: TODO Minimum 2 sentence description
+ * Purpose: Builds WoW characters based on input data from the Web API.  Translates class numbers into common names.
  */
 import org.json.JSONException;
 import org.json.JSONObject;

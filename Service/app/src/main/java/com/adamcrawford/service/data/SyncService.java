@@ -24,7 +24,7 @@ import java.net.URL;
  * Project: Service
  * Package: com.adamcrawford.service.data
  * File:    SyncService
- * Purpose: TODO Minimum 2 sentence description
+ * Purpose: Service that will make WEB API call and download data if it exists.  Will return data in a JSON Object.
  */
 public class SyncService extends IntentService {
     private String TAG = "SyncService";
@@ -70,7 +70,7 @@ public class SyncService extends IntentService {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             if (conn.getResponseMessage().equals("Not Found")) {
                 Log.e(TAG, "Guild not found on server");
-                //TODO Pass not found back to Main activity for display
+
             }
             //if valid response handle data
             if (conn.getResponseMessage().equals("OK")) {

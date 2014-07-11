@@ -14,7 +14,7 @@ import java.io.IOException;
  * Project: Service
  * Package: com.adamcrawford.service.data
  * File:    DataStorage
- * Purpose: TODO Minimum 2 sentence description
+ * Purpose: Singleton for storing and retrieving data.
  */
 public class DataStorage {
     private static DataStorage dataInstance = null;

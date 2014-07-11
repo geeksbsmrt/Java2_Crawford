@@ -5,7 +5,7 @@ package com.adamcrawford.service.toon;
  * Project: Service
  * Package: com.adamcrawford.service.toon
  * File:    ToonAdapter
- * Purpose: TODO Minimum 2 sentence description
+ * Purpose: Adapter for the ListView on the MainActivity screen.  Takes TonnConstructor objects.
  */
 import android.content.Context;
 import android.util.Log;
