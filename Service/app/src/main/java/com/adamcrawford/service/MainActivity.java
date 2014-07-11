@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
@@ -26,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -42,7 +44,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Boolean isConnected = getStatus(this);
+        //final Boolean isConnected = getStatus(this);
 
         charList = (ListView) findViewById(R.id.charList);
         final EditText guildName = (EditText) findViewById(R.id.guildText);
@@ -59,21 +61,19 @@ public class MainActivity extends Activity {
                 String guild = guildName.getText().toString().replace(" ", "%20");
                 //This is static set here but in a fully functional app, the user would be able to pick from a list of realms and it would update the name accordingly
                 String realm = "Llane";
-                String fName = String.format("%s_%s", realm, guild);
+                String fName = String.format("%s_%s", realm, guildName.getText().toString());
+
+                final Boolean isConnected = getStatus(context);
 
                 if (isConnected) {
                     //dismiss keyboard
                     InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-
-
                     //ensure entry in guildEdit
                     if (! guild.equals("")) {
                         //Call service to get data
                         getData(guild);
-                        //TODO call method to populate members list
-                        DataStorage.getInstance().readFile(fName, context);
                     } else {
                         //warn if edit is blank
                         printToast(getString(R.string.noEntry));
@@ -81,8 +81,13 @@ public class MainActivity extends Activity {
                 } else {
                     //Throw not connected message
                     Log.i(TAG, "You are not connected");
+                    Log.i(TAG, fName);
                     printToast(getString(R.string.notConnected));
-                    if (DataStorage.getInstance().readFile(fName, context) != null) {
+                    File env = Environment.getDataDirectory();
+                    String fPath = String.format("%s/data/%s/files/%s", env, getPackageName(), fName.toLowerCase());
+                    File storedFile = new File(fPath);
+                    Log.i(TAG, storedFile.getAbsolutePath());
+                    if (storedFile.exists()) {
                         try {
                             JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
                             writeList(jsonFromFile);
@@ -91,6 +96,7 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
                     } else {
+                        charList.setVisibility(View.GONE);
                         printToast(getString(R.string.noLocal));
                     }
                 }
@@ -192,6 +198,8 @@ public class MainActivity extends Activity {
                         String rName = returned.getString("realm");
                         String fName = String.format("%s_%s", rName, gName);
                         DataStorage.getInstance().writeFile(fName, returned.toString(), activity.context);
+                        JSONObject json = new JSONObject(DataStorage.getInstance().readFile(fName, activity.context));
+                        activity.writeList(json);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

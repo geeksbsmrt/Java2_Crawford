@@ -32,7 +32,7 @@ public class DataStorage {
     public void writeFile (String fileName, String data, Context context) {
 
         try {
-            FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            FileOutputStream fos = context.openFileOutput(fileName.toLowerCase(), Context.MODE_PRIVATE);
             fos.write(data.getBytes());
             fos.close();
             Log.i("Data Storage", "File Written");
@@ -43,8 +43,9 @@ public class DataStorage {
         }
     }
     public String readFile (String fileName, Context context){
+        Log.i("Reading file: ", fileName);
         try {
-            FileInputStream fis = context.openFileInput(fileName);
+            FileInputStream fis = context.openFileInput(fileName.toLowerCase());
             BufferedInputStream bis = new BufferedInputStream(fis);
             byte[] contentBytes = new byte[1024];
             int bytesRead;
@@ -55,6 +56,7 @@ public class DataStorage {
                 content = new String(contentBytes, 0, bytesRead);
                 contentBuffer.append(content);
             }
+            Log.i("Data Storage", String.valueOf(contentBuffer));
             return String.valueOf(contentBuffer);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
