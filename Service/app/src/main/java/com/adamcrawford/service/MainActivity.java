@@ -50,7 +50,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //final Boolean isConnected = getStatus(this);
+        final Boolean isConnected = getStatus(this);
+        if (!isConnected) {
+            printToast(getString(R.string.notConnected));
+        }
 
         charList = (ListView) findViewById(R.id.charList);
         final EditText guildName = (EditText) findViewById(R.id.guildText);
