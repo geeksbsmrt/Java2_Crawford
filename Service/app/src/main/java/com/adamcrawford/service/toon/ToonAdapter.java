@@ -52,19 +52,9 @@ public class ToonAdapter extends ArrayAdapter<ToonConstructor>
             holder = (ViewHolder) convertView.getTag();
         }
 
-        //View listItemView = inflater.inflate(R.layout.item_toon, null);
-
-
-        //TextView toonNameView = (TextView) listItemView.findViewById(R.id.toonName);
         holder.toonNameView.setText(toon.toonName);
-
-        //TextView toonLevelView = (TextView) listItemView.findViewById(R.id.toonLevel);
         holder.toonLevelView.setText(toon.toonLevel);
-
-        //TextView toonClassView = (TextView) listItemView.findViewById(R.id.toonClass);
         holder.toonClassView.setText(toon.tnClass);
-
-       // return listItemView;
 
         return convertView;
     }

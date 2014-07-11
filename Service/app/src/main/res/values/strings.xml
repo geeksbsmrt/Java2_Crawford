@@ -7,12 +7,14 @@
     <string name="submitButton">Get Members</string>
     <string name="notConnected">Active Internet connection required for latest information.</string>
     <string name="noEntry">Please enter a guild name</string>
-    <string name="notFound">Guild not found on selected server.</string>
+    <string name="notFound">Guild not found on server</string>
     <string name="toonName">toonName</string>
     <string name="toonLevel">toonLevel</string>
     <string name="toonClass">toonClass</string>
     <string name="relDesc">A static realm will be used for this assignment.</string>
     <string name="appDesc">This application queries the World of Warcraft database for the members of the selected guild.</string>
     <string name="realm">Llane</string>
+    <string name="staticData">Using data stored locally</string>
+    <string name="noLocal">No information stored for guild</string>
 
 </resources>

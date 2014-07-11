@@ -2,17 +2,23 @@ package com.adamcrawford.service;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.adamcrawford.service.data.CharSync;
+import com.adamcrawford.service.data.DataStorage;
+import com.adamcrawford.service.data.SyncService;
 import com.adamcrawford.service.toon.ToonAdapter;
 import com.adamcrawford.service.toon.ToonConstructor;
 
@@ -20,14 +26,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+
 
 
 public class MainActivity extends Activity {
 
     private ListView charList;
     private static String TAG = "MainActivity";
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,9 @@ public class MainActivity extends Activity {
 
         final Boolean isConnected = getStatus(this);
 
+        charList = (ListView) findViewById(R.id.charList);
+        final EditText guildName = (EditText) findViewById(R.id.guildText);
+
         //get and create onclick for button
         Button submitButton = (Button) findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener()
@@ -43,23 +54,26 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v)
             {
+
+                //pull entered user text
+                String guild = guildName.getText().toString().replace(" ", "%20");
+                //This is static set here but in a fully functional app, the user would be able to pick from a list of realms and it would update the name accordingly
+                String realm = "Llane";
+                String fName = String.format("%s_%s", realm, guild);
+
                 if (isConnected) {
                     //dismiss keyboard
                     InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                    //pull selected name out of spinner
-                    String realmName = "Llane";
-                    //			    System.out.println(realmName);
 
-                    //pull entered user text
-                    //String guild = guildName.getText().toString().replace(" ", "%20");
-                    String guild = "Remnants%20of%20Sanity";
 
                     //ensure entry in guildEdit
                     if (! guild.equals("")) {
-                        //call method to populate members list
-                        updateList(realmName, guild);
+                        //Call service to get data
+                        getData(guild);
+                        //TODO call method to populate members list
+                        DataStorage.getInstance().readFile(fName, context);
                     } else {
                         //warn if edit is blank
                         printToast(getString(R.string.noEntry));
@@ -68,6 +82,17 @@ public class MainActivity extends Activity {
                     //Throw not connected message
                     Log.i(TAG, "You are not connected");
                     printToast(getString(R.string.notConnected));
+                    if (DataStorage.getInstance().readFile(fName, context) != null) {
+                        try {
+                            JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
+                            writeList(jsonFromFile);
+                            printToast(getString(R.string.staticData));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        printToast(getString(R.string.noLocal));
+                    }
                 }
 
             }
@@ -84,33 +109,6 @@ public class MainActivity extends Activity {
 
         //true/false based on connectivity
         return netInfo != null && netInfo.isConnected();
-    }
-
-    //method to get information to put into listview
-    private void updateList (String realm, String guild) {
-
-        //call class to connect to network and pull info based on realm selection and input guild
-        //TODO Use this to get information from local file
-        JSONObject toons = null;
-        try {
-            toons = new CharSync().execute(guild).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        //check for data inside JSON object
-        if (toons != null) {
-            //data exists - put it out to screen
-            writeList(toons);
-        } else {
-            //data does not exist
-
-            //clear screen if successful query previously run
-            charList.setVisibility(View.GONE);
-            //throw error to screen
-            printToast(getString(R.string.notFound));
-        }
     }
 
     //method to output values to list
@@ -155,7 +153,7 @@ public class MainActivity extends Activity {
     }
 
     //method to display error to user
-    public void printToast(String message) {
+    private void printToast(String message) {
         //get active context
         Context c = getApplicationContext();
         //set length for message to be displayed
@@ -164,4 +162,50 @@ public class MainActivity extends Activity {
         Toast error = Toast.makeText(c, message, duration);
         error.show();
     }
+
+    private void getData(String guild) {
+        Intent getJSON = new Intent(this, SyncService.class);
+        getJSON.putExtra("guild", guild);
+        final DataHandler handler = new DataHandler(this);
+
+        Messenger msgr = new Messenger(handler);
+        getJSON.putExtra("msgr", msgr);
+        startService(getJSON);
+    }
+
+    private static class DataHandler extends Handler {
+        private final WeakReference<MainActivity> mainActivityWeakReference;
+        public DataHandler(MainActivity activity) {
+            mainActivityWeakReference = new WeakReference<MainActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity activity = mainActivityWeakReference.get();
+            if (activity != null) {
+                JSONObject returned = (JSONObject) msg.obj;
+                if (msg.arg1 == RESULT_OK && returned != null) {
+                    Log.i(TAG, "Data returned");
+                    //activity.writeList(returned);
+                    try {
+                        String gName = returned.getString("name");
+                        String rName = returned.getString("realm");
+                        String fName = String.format("%s_%s", rName, gName);
+                        DataStorage.getInstance().writeFile(fName, returned.toString(), activity.context);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    Log.i(TAG, "No data");
+                    activity.charList.setVisibility(View.GONE);
+                    //throw error to screen
+
+                    activity.printToast(activity.getString(R.string.notFound));
+                }
+            }
+        }
+
+    }
 }
+
