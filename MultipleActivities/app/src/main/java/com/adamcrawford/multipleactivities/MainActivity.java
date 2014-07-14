@@ -12,9 +12,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,78 +48,54 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         final Boolean isConnected = getStatus(this);
-        if (!isConnected) {
-            printToast(getString(R.string.notConnected));
-        }
-
         charList = (ListView) findViewById(R.id.charList);
 
-        //get and create onclick for button
-        Button submitButton = (Button) findViewById(R.id.submitButton);
-        submitButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-
-                //pull entered user text
-                String guild = guildName.getText().toString().replace(" ", "%20");
-                //This is static set here but in a fully functional app, the user would be able to pick from a list of realms and it would update the name accordingly
-                String realm = "Llane";
-                String fName = String.format("%s_%s", realm, guildName.getText().toString());
-
-                final Boolean isConnected = getStatus(context);
-
-                if (isConnected) {
-                    //dismiss keyboard
-                    InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-                    //ensure entry in guildEdit
-                    if (! guild.equals("")) {
-                        //Call service to get data
-                        getData(guild);
-                    } else {
-                        //warn if edit is blank
-                        printToast(getString(R.string.noEntry));
-                    }
-                } else {
-                    //Throw not connected message
-                    Log.i(TAG, "You are not connected");
-                    Log.i(TAG, fName);
-                    printToast(getString(R.string.notConnected));
-                    File env = Environment.getDataDirectory();
-                    String fPath = String.format("%s/data/%s/files/%s", env, getPackageName(), fName.toLowerCase());
-                    File storedFile = new File(fPath);
-                    Log.i(TAG, storedFile.getAbsolutePath());
-                    if (storedFile.exists()) {
-                        try {
-                            JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
-                            writeList(jsonFromFile);
-                            printToast(getString(R.string.staticData));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        charList.setVisibility(View.GONE);
-                        printToast(getString(R.string.noLocal));
-                    }
-                }
-
-            }
-        });
-
+        // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
+        String fName = String.format("%s_%s", "Llane", "Remnants of Sanity");
+        if (isConnected) {
+            // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
+            getData("remnants%20of%20sanity");
+        } else {
+            //Throw not connected message
+            Log.i(TAG, "You are not connected");
+            printToast(getString(R.string.notConnected));
+            readFile(fName);
+        }
     }
 
     //method to check for connectivity
     private Boolean getStatus(Context c){
-        //Log.i(TAG, "In getStatus");
+        Log.i(TAG, "In getStatus");
+
         //build connectivity manager and network info
         ConnectivityManager conMan = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
 
         //true/false based on connectivity
         return netInfo != null && netInfo.isConnected();
+    }
+
+    private void readFile (String fName) {
+        Log.i(TAG, "In readFile");
+
+        File env = Environment.getDataDirectory();
+        String fPath = String.format("%s/data/%s/files/%s", env, getPackageName(), fName.toLowerCase());
+        File storedFile = new File(fPath);
+
+        String absPath = String.format("Reading File: %s", storedFile.getAbsolutePath()) ;
+        Log.i(TAG, absPath);
+        if (storedFile.exists()) {
+            try {
+                JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
+                writeList(jsonFromFile);
+                printToast(getString(R.string.staticData));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            charList.setVisibility(View.GONE);
+            printToast(getString(R.string.noLocal));
+        }
     }
 
     //method to output values to list
@@ -142,8 +115,6 @@ public class MainActivity extends Activity {
             //loop through array putting member names into string array
             for (int i=0, j=dataArray.length(); i<j; i++) {
                 JSONObject toon = (JSONObject) dataArray.get(i);
-                //Log.i("Looping Toons: ", toon.toString());
-                //toonNames.add(toon.getJSONObject("character").getString("name"));
                 ToonConstructor tc = new ToonConstructor(toon);
                 toonNames.add(tc);
             }
@@ -197,27 +168,10 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             MainActivity activity = mainActivityWeakReference.get();
             if (activity != null) {
-                JSONObject returned = (JSONObject) msg.obj;
+                String returned = (String) msg.obj;
                 if (msg.arg1 == RESULT_OK && returned != null) {
-                    Log.i(TAG, "Data returned");
-                    //activity.writeList(returned);
-                    try {
-                        String gName = returned.getString("name");
-                        String rName = returned.getString("realm");
-                        String fName = String.format("%s_%s", rName, gName);
-                        DataStorage.getInstance().writeFile(fName, returned.toString(), activity.context);
-                        JSONObject json = new JSONObject(DataStorage.getInstance().readFile(fName, activity.context));
-                        activity.writeList(json);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    Log.i(TAG, "No data");
-                    activity.charList.setVisibility(View.GONE);
-                    //throw error to screen
-
-                    activity.printToast(activity.getString(R.string.notFound));
+                    Log.i(TAG, "Data stored");
+                    activity.readFile(returned);
                 }
             }
         }

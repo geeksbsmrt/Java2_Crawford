@@ -42,17 +42,24 @@ public class SyncService extends IntentService {
         Messenger msgr = (Messenger) extras.get("msgr");
         Message msg = Message.obtain();
 
-        //Log.i(TAG, members.toString());
-        msg.arg1 = MainActivity.RESULT_OK;
-        msg.obj = members;
+        if (members != null) {
+            try {
+                String gName = members.getString("name");
+                String rName = members.getString("realm");
+                String fName = String.format("%s_%s", rName, gName).toLowerCase();
+                DataStorage.getInstance().writeFile(fName, members.toString(), this);
+                msg.arg1 = MainActivity.RESULT_OK;
+                msg.obj = fName;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
         try {
             msgr.send(msg);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private JSONObject getData (String guildName) {
