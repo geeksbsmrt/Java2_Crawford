@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WoW Guild Members</string>
+    <string name="notConnected">Active Internet connection required for latest information.</string>
+    <string name="toonName">toonName</string>
+    <string name="toonLevel">toonLevel</string>
+    <string name="toonClass">toonClass</string>
+    <string name="appDesc">This application queries the World of Warcraft database for the members of the selected guild.</string>
+    <string name="staticData">Using data stored locally</string>
+    <string name="noLocal">No information stored for guild</string>
+
+</resources>
