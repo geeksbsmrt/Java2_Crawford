@@ -17,22 +17,33 @@
         android:text="@string/toonName"
         />
 
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/detailToonName"
+        android:id="@+id/toonRating"
+        android:numStars="5"
+        android:stepSize="1"
+        android:rating="0"
+        />
+
     <ImageView
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/blankProfilePic"
+        android:src="@drawable/blankprofilepic"
         android:id="@+id/detailToonImg"
         android:contentDescription="@string/toonImg"
-        android:layout_below="@+id/detailToonName"
+        android:layout_below="@+id/toonRating"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/detailToonLevel"
+        android:id="@+id/toonLevelLable"
         android:layout_below="@+id/detailToonImg"
         android:text="@string/levelLable"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -43,6 +54,25 @@
         android:layout_below="@+id/detailToonImg"
         android:layout_alignParentRight="true"
         android:text="@string/toonLevel"
+        android:id="@+id/detailToonLevel"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toonLevelLable"
+        android:text="@string/classLable"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/detailToonLevel"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/toonClass"
+        android:id="@+id/detailToonClass"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
 </RelativeLayout>

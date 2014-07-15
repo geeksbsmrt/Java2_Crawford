@@ -8,6 +8,7 @@ package com.adamcrawford.multipleactivities.toon;
  * Purpose: TODO Minimum 2 sentence description
  */
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class ToonAdapter extends ArrayAdapter<ToonConstructor>
         holder.toonNameView.setText(toon.toonName);
         holder.toonLevelView.setText(toon.toonLevel);
         holder.toonClassView.setText(toon.tnClass);
+        holder.toonClassView.setTextColor(Color.parseColor(toon.tnColor));
 
         return convertView;
     }
