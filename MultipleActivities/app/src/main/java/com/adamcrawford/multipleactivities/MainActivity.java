@@ -3,6 +3,7 @@ package com.adamcrawford.multipleactivities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -41,6 +42,10 @@ public class MainActivity extends Activity {
     private ListView charList;
     private static String TAG = "MainActivity";
     private Context context = this;
+    static File env = Environment.getDataDirectory();
+    static String fPath;
+    static File storedFile;
+    static String absPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,11 @@ public class MainActivity extends Activity {
 
         // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
         String fName = String.format("%s_%s", "Llane", "Remnants of Sanity");
+
+        env = Environment.getDataDirectory();
+        fPath = String.format("%s/data/%s/files/%s", env, this.getPackageName(), fName.toLowerCase());
+        storedFile = new File(fPath);
+        absPath = String.format("Reading File: %s", storedFile.getAbsolutePath()) ;
         if (isConnected) {
             // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
             getData("remnants%20of%20sanity");
@@ -59,7 +69,13 @@ public class MainActivity extends Activity {
             //Throw not connected message
             Log.i(TAG, "You are not connected");
             printToast(getString(R.string.notConnected));
-            readFile(fName);
+            if (storedFile.exists()) {
+                printToast(getString(R.string.staticData));
+                readFile(fName);
+            }  else {
+                Log.i(TAG, "File Not Exist");
+                printToast(getString(R.string.noLocal));
+            }
         }
     }
 
@@ -77,24 +93,11 @@ public class MainActivity extends Activity {
 
     private void readFile (String fName) {
         Log.i(TAG, "In readFile");
-
-        File env = Environment.getDataDirectory();
-        String fPath = String.format("%s/data/%s/files/%s", env, getPackageName(), fName.toLowerCase());
-        File storedFile = new File(fPath);
-
-        String absPath = String.format("Reading File: %s", storedFile.getAbsolutePath()) ;
-        Log.i(TAG, absPath);
-        if (storedFile.exists()) {
-            try {
-                JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
-                writeList(jsonFromFile);
-                printToast(getString(R.string.staticData));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            charList.setVisibility(View.GONE);
-            printToast(getString(R.string.noLocal));
+        try {
+            JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
+            writeList(jsonFromFile);
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -133,7 +136,8 @@ public class MainActivity extends Activity {
 
             //handle errors
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Cannot build list");
+            //e.printStackTrace();
         }
     }
 
@@ -168,10 +172,23 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             MainActivity activity = mainActivityWeakReference.get();
             if (activity != null) {
+                Resources res = activity.getResources();
                 String returned = (String) msg.obj;
                 if (msg.arg1 == RESULT_OK && returned != null) {
                     Log.i(TAG, "Data stored");
                     activity.readFile(returned);
+                } else if (returned != null) {
+                    Log.i(TAG, absPath);
+                    if (storedFile.exists()) {
+                        activity.printToast(res.getString(R.string.staticData));
+                        activity.readFile(returned);
+                    } else {
+                        Log.i(TAG, "File Not Exist");
+                        activity.printToast(res.getString(R.string.noLocal));
+                    }
+                } else {
+                    Log.i(TAG, "Last Else");
+                    activity.printToast(res.getString(R.string.notReturned));
                 }
             }
         }

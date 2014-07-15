@@ -59,9 +59,11 @@ public class DataStorage {
             Log.i("Data Storage", String.valueOf(contentBuffer));
             return String.valueOf(contentBuffer);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.e("DS: ", "FNFE");
+            //e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("DS: ", "IOE");
+            //e.printStackTrace();
         }
         return "";
     }

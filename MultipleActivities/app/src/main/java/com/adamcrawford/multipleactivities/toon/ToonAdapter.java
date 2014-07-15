@@ -8,7 +8,6 @@ package com.adamcrawford.multipleactivities.toon;
  * Purpose: TODO Minimum 2 sentence description
  */
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ public class ToonAdapter extends ArrayAdapter<ToonConstructor>
         super(context, resource, objects);
         this.context = context;
         this.objects = objects;
-        Log.i("TA Objects: ", objects.toString());
+        //Log.i("TA Objects: ", objects.toString());
     }
 
     @Override
