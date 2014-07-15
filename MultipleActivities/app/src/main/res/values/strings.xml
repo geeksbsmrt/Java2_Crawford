@@ -13,5 +13,6 @@
     <string name="toonImg">Current toon image</string>
     <string name="levelLable">Level: </string>
     <string name="classLable">Class: </string>
+    <string name="title_activity_toon_detail">ToonDetail</string>
 
 </resources>
