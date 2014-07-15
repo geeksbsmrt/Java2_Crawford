@@ -10,5 +10,8 @@
     <string name="staticData">Using data stored locally</string>
     <string name="noLocal">No information stored for guild</string>
     <string name="notReturned">No information returned for guild</string>
+    <string name="toonImg">Current toon image</string>
+    <string name="levelLable">Level: </string>
+    <string name="classLable">Class: </string>
 
 </resources>
