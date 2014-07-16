@@ -68,6 +68,8 @@ public class MainActivity extends Activity {
                 intent.putExtra("class", toon.tnClass);
                 intent.putExtra("color", toon.tnColor);
                 intent.putExtra("race", toon.tnRace);
+                intent.putExtra("role", toon.toonRole);
+                intent.putExtra("spec", toon.toonSpec);
                 intent.putExtra("connected", isConnected.toString());
 
                 startActivityForResult(intent, 0);

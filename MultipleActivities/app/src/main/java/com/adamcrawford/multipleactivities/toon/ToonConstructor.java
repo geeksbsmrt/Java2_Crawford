@@ -19,6 +19,8 @@ public class ToonConstructor
     public String tnColor;
     public String tnRace;
     public String tnGender;
+    public String toonRole;
+    public String toonSpec;
 
 
     public enum CharClass {
@@ -118,6 +120,8 @@ public class ToonConstructor
             this.tnColor = CharClass.values()[object.getJSONObject("character").getInt("class")].getToonColor();
             this.tnRace = CharRace.values()[object.getJSONObject("character").getInt("race")].getToonRace();
             this.tnGender = CharGender.values()[object.getJSONObject("character").getInt("gender")].getToonGender();
+            this.toonRole = object.getJSONObject("character").getJSONObject("spec").getString("role");
+            this.toonSpec = object.getJSONObject("character").getJSONObject("spec").getString("name");
         } catch (JSONException e) {
             e.printStackTrace();
         }
