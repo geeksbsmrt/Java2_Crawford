@@ -1,14 +1,105 @@
 package com.adamcrawford.multipleactivities.toon;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.adamcrawford.multipleactivities.R;
+import com.adamcrawford.multipleactivities.data.ImageSync;
+
+import java.lang.ref.WeakReference;
+
 
 public class ToonDetail extends Activity {
+    private String TAG = "ToonDetail";
+    private TextView toonName;
+    private TextView toonLevel;
+    private TextView toonClass;
+    private ImageView toonImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toon_detail);
+
+        toonClass = (TextView) findViewById(R.id.detailToonClass);
+        toonLevel = (TextView) findViewById(R.id.detailToonLevel);
+        toonName = (TextView) findViewById(R.id.detailToonName);
+        toonImg = (ImageView) findViewById(R.id.detailToonImg);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            toonClass.setText(extras.getString("class"));
+            toonLevel.setText(extras.getString("level"));
+            toonName.setText(extras.getString("name"));
+            toonClass.setTextColor(Color.parseColor(extras.getString("color")));
+            if (extras.getString("connected").equals("true")) {
+                getData(extras.getString("icon"));
+            }
+        } else {
+            Log.wtf(TAG, "Got here without data.");
+        }
+    }
+
+    private void getData(String img) {
+        Intent getImg = new Intent(this, ImageSync.class);
+        getImg.putExtra("img", img);
+
+        final DataHandler handler = new DataHandler(this);
+
+        Messenger msgr = new Messenger(handler);
+        getImg.putExtra("msgr", msgr);
+        startService(getImg);
+    }
+
+    private void setImg (Bitmap img) {
+        toonImg.setImageBitmap(img);
+        toonImg.setVisibility(View.VISIBLE);
+    }
+
+    private static class DataHandler extends Handler {
+        private final WeakReference<ToonDetail> toonDetailWeakReference;
+        public DataHandler(ToonDetail activity) {
+            toonDetailWeakReference = new WeakReference<ToonDetail>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            ToonDetail activity = toonDetailWeakReference.get();
+            if (activity != null) {
+                Resources res = activity.getResources();
+                Bitmap returned = (Bitmap) msg.obj;
+                if (msg.arg1 == RESULT_OK && returned != null) {
+                    Log.i(activity.TAG, "Data stored");
+                    //TODO get image
+                    activity.setImg(returned);
+                } else {
+                    Log.i(activity.TAG, "File Not Exist");
+                    activity.printToast(res.getString(R.string.noImage));
+                }
+            }
+        }
+    }
+
+    private void printToast(String message) {
+        //get active context
+        Context c = getApplicationContext();
+        //set length for message to be displayed
+        int duration = Toast.LENGTH_LONG;
+        //create message based on input parameter then display it
+        Toast error = Toast.makeText(c, message, duration);
+        error.show();
     }
 }

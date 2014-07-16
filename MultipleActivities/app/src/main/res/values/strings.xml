@@ -8,11 +8,12 @@
     <string name="toonClass">toonClass</string>
     <string name="appDesc">Members of: Llane - Remnants of Sanity</string>
     <string name="staticData">Using data stored locally</string>
-    <string name="noLocal">No information stored for guild</string>
-    <string name="notReturned">No information returned for guild</string>
+    <string name="noLocal">No information stored on device</string>
+    <string name="notReturned">No information returned from network</string>
     <string name="toonImg">Current toon image</string>
     <string name="levelLable">Level: </string>
     <string name="classLable">Class: </string>
-    <string name="title_activity_toon_detail">ToonDetail</string>
+    <string name="title_activity_toon_detail">Toon Detail</string>
+    <string name="noImage">Image not found on server</string>
 
 </resources>

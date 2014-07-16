@@ -13,6 +13,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.adamcrawford.multipleactivities.data.DataStorage;
 import com.adamcrawford.multipleactivities.data.SyncService;
 import com.adamcrawford.multipleactivities.toon.ToonAdapter;
 import com.adamcrawford.multipleactivities.toon.ToonConstructor;
+import com.adamcrawford.multipleactivities.toon.ToonDetail;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +56,22 @@ public class MainActivity extends Activity {
 
         final Boolean isConnected = getStatus(this);
         charList = (ListView) findViewById(R.id.charList);
+        charList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ToonConstructor toon = (ToonConstructor) charList.getItemAtPosition(i);
+                Log.i(TAG, toon.toonName);
+                Intent intent = new Intent(context, ToonDetail.class);
+                intent.putExtra("name", toon.toonName);
+                intent.putExtra("level", toon.toonLevel);
+                intent.putExtra("icon", toon.toonIcon);
+                intent.putExtra("class", toon.tnClass);
+                intent.putExtra("color", toon.tnColor);
+                intent.putExtra("connected", isConnected.toString());
+
+                startActivityForResult(intent, 0);
+            }
+        });
 
         // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
         String fName = String.format("%s_%s", "Llane", "Remnants of Sanity");
@@ -80,7 +98,7 @@ public class MainActivity extends Activity {
     }
 
     //method to check for connectivity
-    private Boolean getStatus(Context c){
+    public Boolean getStatus(Context c){
         Log.i(TAG, "In getStatus");
 
         //build connectivity manager and network info
@@ -177,21 +195,15 @@ public class MainActivity extends Activity {
                 if (msg.arg1 == RESULT_OK && returned != null) {
                     Log.i(TAG, "Data stored");
                     activity.readFile(returned);
-                } else if (returned != null) {
-                    Log.i(TAG, absPath);
-                    if (storedFile.exists()) {
-                        activity.printToast(res.getString(R.string.staticData));
-                        activity.readFile(returned);
-                    } else {
-                        Log.i(TAG, "File Not Exist");
-                        activity.printToast(res.getString(R.string.noLocal));
-                    }
+                } else if (storedFile.exists()) {
+                    activity.printToast(res.getString(R.string.staticData));
+                    activity.readFile(returned);
                 } else {
-                    Log.i(TAG, "Last Else");
+                    Log.i(TAG, "File Not Exist");
                     activity.printToast(res.getString(R.string.notReturned));
+                    activity.printToast(res.getString(R.string.noLocal));
                 }
             }
         }
-
     }
 }

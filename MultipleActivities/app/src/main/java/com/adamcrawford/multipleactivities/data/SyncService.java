@@ -77,7 +77,6 @@ public class SyncService extends IntentService {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             if (conn.getResponseMessage().equals("Not Found")) {
                 Log.e(TAG, "Guild not found on server");
-
             }
             //if valid response handle data
             if (conn.getResponseMessage().equals("OK")) {

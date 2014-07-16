@@ -38,6 +38,7 @@
         android:id="@+id/detailToonImg"
         android:contentDescription="@string/toonImg"
         android:layout_below="@+id/toonRating"
+        android:visibility="gone"
         />
 
     <TextView
