@@ -34,6 +34,9 @@ public class ToonDetail extends Activity {
         TextView toonClass = (TextView) findViewById(R.id.detailToonClass);
         TextView toonLevel = (TextView) findViewById(R.id.detailToonLevel);
         TextView toonName = (TextView) findViewById(R.id.detailToonName);
+        TextView toonRace = (TextView) findViewById(R.id.detailToonRace);
+        TextView toonRole = (TextView) findViewById(R.id.detailToonRole);
+        TextView toonSpec = (TextView) findViewById(R.id.detailToonSpec);
         toonImg = (ImageView) findViewById(R.id.detailToonImg);
 
         Bundle extras = getIntent().getExtras();
@@ -41,6 +44,9 @@ public class ToonDetail extends Activity {
             toonClass.setText(extras.getString("class"));
             toonLevel.setText(extras.getString("level"));
             toonName.setText(extras.getString("name"));
+            toonRace.setText(extras.getString("race"));
+            toonRole.setText(extras.getString("role"));
+            toonSpec.setText(extras.getString("spec"));
             toonClass.setTextColor(Color.parseColor(extras.getString("color")));
             if (extras.getString("connected").equals("true")) {
                 getData(extras.getString("icon"));

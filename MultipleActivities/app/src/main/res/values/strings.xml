@@ -11,8 +11,14 @@
     <string name="noLocal">No information stored on device</string>
     <string name="notReturned">No information returned from network</string>
     <string name="toonImg">Current toon image</string>
-    <string name="levelLable">Level: </string>
-    <string name="classLable">Class: </string>
+    <string name="levelLabel">Level: </string>
+    <string name="classLabel">Class: </string>
+    <string name="roleLabel">Role: </string>
+    <string name="specLabel">Spec: </string>
+    <string name="toonRole">toonRole</string>
+    <string name="raceLabel">Race: </string>
+    <string name="toonRace">toonRace</string>
+    <string name="toonSpec">toonSpec</string>
     <string name="title_activity_toon_detail">Toon Detail</string>
     <string name="noImage">Image not found on server</string>
 

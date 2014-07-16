@@ -17,6 +17,8 @@ public class ToonConstructor
     public String toonLevel;
     public String tnClass;
     public String tnColor;
+    public String tnRace;
+    public String tnGender;
 
 
     public enum CharClass {
@@ -51,6 +53,61 @@ public class ToonConstructor
 
     }
 
+    public enum CharRace {
+        NONE(""),
+        HUMAN("Human"),
+        ORC("Orc"),
+        DWARF("Dwarf"),
+        NIGHTELF("Night Elf"),
+        UNDEAD("Undead"),
+        TAUREN("Tauren"),
+        GNOME("Gnome"),
+        TROLL("Troll"),
+        GOBLIN("Goblin"),
+        BLOODELF("Blood Elf"),
+        DRAENEI("Draenei"),
+        TWELVE(""),
+        THIRTEEN(""),
+        FOURTEEN(""),
+        FIFTEEN(""),
+        SIXTEEN(""),
+        SEVENTEEN(""),
+        EIGHTEEN(""),
+        NINETEEN(""),
+        TWENTY(""),
+        TWENTYONE(""),
+        WORGEN("Worgen"),
+        TWENTYTHREE(""),
+        PANDARENN("Pandaren (Neutral)"),
+        PANDARENA("Pandaren (Alliance)"),
+        PANDARENH("Pandaren (Horde)");
+
+        private final String toonRace;
+
+        CharRace(String tRace) {
+            toonRace = tRace;
+        }
+
+        public String getToonRace () {
+            return toonRace;
+        }
+    }
+
+    public enum CharGender {
+        MALE("Male"),
+        FEMALE("Female");
+
+        private final String toonGender;
+
+        CharGender(String cGender) {
+            toonGender = cGender;
+        }
+
+        public String getToonGender() {
+            return toonGender;
+        }
+    }
+
     public ToonConstructor (JSONObject object) {
 
         try {
@@ -59,6 +116,8 @@ public class ToonConstructor
             this.toonIcon = object.getJSONObject("character").getString("thumbnail");
             this.tnClass = CharClass.values()[object.getJSONObject("character").getInt("class")].getToonClass();
             this.tnColor = CharClass.values()[object.getJSONObject("character").getInt("class")].getToonColor();
+            this.tnRace = CharRace.values()[object.getJSONObject("character").getInt("race")].getToonRace();
+            this.tnGender = CharGender.values()[object.getJSONObject("character").getInt("gender")].getToonGender();
         } catch (JSONException e) {
             e.printStackTrace();
         }

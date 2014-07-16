@@ -44,9 +44,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/toonLevelLable"
+        android:id="@+id/toonLevelLabel"
         android:layout_below="@+id/detailToonImg"
-        android:text="@string/levelLable"
+        android:text="@string/levelLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
     <TextView
@@ -61,8 +61,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toonLevelLable"
-        android:text="@string/classLable"
+        android:layout_below="@+id/toonLevelLabel"
+        android:text="@string/raceLabel"
+        android:id="@+id/toonRaceLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginTop="10dp"
         />
@@ -72,8 +73,65 @@
         android:layout_below="@+id/detailToonLevel"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
+        android:text="@string/toonRace"
+        android:id="@+id/detailToonRace"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toonRaceLabel"
+        android:text="@string/classLabel"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="10dp"
+        android:id="@+id/toonClassLable"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/detailToonRace"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
         android:text="@string/toonClass"
         android:id="@+id/detailToonClass"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toonClassLable"
+        android:text="@string/roleLabel"
+        android:id="@+id/toonRoleLabel"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/detailToonClass"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/toonRole"
+        android:id="@+id/detailToonRole"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toonRoleLabel"
+        android:text="@string/specLabel"
+        android:id="@+id/toonSpecLabel"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/detailToonRole"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/toonSpec"
+        android:id="@+id/detailToonSpec"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
