@@ -24,9 +24,6 @@ import java.lang.ref.WeakReference;
 
 public class ToonDetail extends Activity {
     private String TAG = "ToonDetail";
-    private TextView toonName;
-    private TextView toonLevel;
-    private TextView toonClass;
     private ImageView toonImg;
 
     @Override
@@ -34,9 +31,9 @@ public class ToonDetail extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toon_detail);
 
-        toonClass = (TextView) findViewById(R.id.detailToonClass);
-        toonLevel = (TextView) findViewById(R.id.detailToonLevel);
-        toonName = (TextView) findViewById(R.id.detailToonName);
+        TextView toonClass = (TextView) findViewById(R.id.detailToonClass);
+        TextView toonLevel = (TextView) findViewById(R.id.detailToonLevel);
+        TextView toonName = (TextView) findViewById(R.id.detailToonName);
         toonImg = (ImageView) findViewById(R.id.detailToonImg);
 
         Bundle extras = getIntent().getExtras();
