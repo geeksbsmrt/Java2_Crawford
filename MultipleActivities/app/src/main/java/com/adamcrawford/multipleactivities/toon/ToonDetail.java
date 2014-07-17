@@ -137,7 +137,6 @@ public class ToonDetail extends Activity {
                 Bitmap returned = (Bitmap) msg.obj;
                 if (msg.arg1 == RESULT_OK && returned != null) {
                     Log.i(activity.TAG, "Data stored");
-                    //TODO get image
                     activity.setImg(returned);
                 } else {
                     //Log.i(activity.TAG, "File Not Exist");
@@ -171,7 +170,6 @@ public class ToonDetail extends Activity {
     public void finish() {
         Log.i(TAG, "FINISHING");
         Intent data = new Intent();
-        //TODO put info into data
         data.putExtra("rating", String.valueOf(toonRating));
         data.putExtra("name", tnName);
         setResult(RESULT_OK, data);
