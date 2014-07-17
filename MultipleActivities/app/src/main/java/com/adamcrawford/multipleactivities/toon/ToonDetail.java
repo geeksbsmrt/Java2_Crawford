@@ -22,6 +22,14 @@ public class ToonDetail extends Activity {
     private String TAG = "ToonDetail";
     private int toonRating;
     private String tnName;
+    TextView toonClass;
+    TextView toonLevel;
+    TextView toonName;
+    TextView toonRace;
+    TextView toonRole;
+    TextView toonSpec;
+    SmartImageView mySmartImage;
+    RatingBar toonRatingBar;
     static final String STATE_CLASS = "toonClass";
     static final String STATE_LEVEL = "toonLevel";
     static final String STATE_NAME = "toonName";
@@ -38,14 +46,14 @@ public class ToonDetail extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toon_detail);
 
-        TextView toonClass = (TextView) findViewById(R.id.detailToonClass);
-        TextView toonLevel = (TextView) findViewById(R.id.detailToonLevel);
-        TextView toonName = (TextView) findViewById(R.id.detailToonName);
-        TextView toonRace = (TextView) findViewById(R.id.detailToonRace);
-        TextView toonRole = (TextView) findViewById(R.id.detailToonRole);
-        TextView toonSpec = (TextView) findViewById(R.id.detailToonSpec);
-        SmartImageView mySmartImage = (SmartImageView) findViewById(R.id.smartToonImg);
-        RatingBar toonRatingBar = (RatingBar) findViewById(R.id.toonRating);
+        toonClass = (TextView) findViewById(R.id.detailToonClass);
+        toonLevel = (TextView) findViewById(R.id.detailToonLevel);
+        toonName = (TextView) findViewById(R.id.detailToonName);
+        toonRace = (TextView) findViewById(R.id.detailToonRace);
+        toonRole = (TextView) findViewById(R.id.detailToonRole);
+        toonSpec = (TextView) findViewById(R.id.detailToonSpec);
+        mySmartImage = (SmartImageView) findViewById(R.id.smartToonImg);
+        toonRatingBar = (RatingBar) findViewById(R.id.toonRating);
         Button getWebInfo = (Button) findViewById(R.id.getWebInfo);
         Button share = (Button) findViewById(R.id.shareToon);
 
@@ -97,7 +105,6 @@ public class ToonDetail extends Activity {
             toonSpec.setText(extras.getString("spec"));
             toonClass.setTextColor(Color.parseColor(extras.getString("color")));
             if (extras.getString("connected").equals("true")) {
-                //getData(extras.getString("icon"), extras.getString("name"));
                 mySmartImage.setImageUrl("http://us.battle.net/static-render/us/"+extras.getString("icon"));
                 mySmartImage.setVisibility(View.VISIBLE);
             }
@@ -106,58 +113,6 @@ public class ToonDetail extends Activity {
             Log.wtf(TAG, "Got here without data.");
         }
     }
-
-//    private void getData(String img, String name) {
-//        Intent getImg = new Intent(this, ImageSync.class);
-//        getImg.putExtra("img", img);
-//        getImg.putExtra("name", name);
-//
-//        final DataHandler handler = new DataHandler(this);
-//
-//        Messenger msgr = new Messenger(handler);
-//        getImg.putExtra("msgr", msgr);
-//        startService(getImg);
-//    }
-
-//    private void setImg (Bitmap img) {
-//        //toonImg.setImageBitmap(img);
-//        //toonImg.setVisibility(View.VISIBLE);
-//        mySmartImage.setImageBitmap(img);
-//        mySmartImage.setVisibility(View.VISIBLE);
-//    }
-
-//    private static class DataHandler extends Handler {
-//        private final WeakReference<ToonDetail> toonDetailWeakReference;
-//        public DataHandler(ToonDetail activity) {
-//            toonDetailWeakReference = new WeakReference<ToonDetail>(activity);
-//        }
-//
-//        @Override
-//        public void handleMessage(Message msg) {
-//            ToonDetail activity = toonDetailWeakReference.get();
-//            if (activity != null) {
-//                Resources res = activity.getResources();
-//                Bitmap returned = (Bitmap) msg.obj;
-//                if (msg.arg1 == RESULT_OK && returned != null) {
-//                    Log.i(activity.TAG, "Data stored");
-//                    activity.setImg(returned);
-//                } else {
-//                    //Log.i(activity.TAG, "File Not Exist");
-//                    activity.printToast(res.getString(R.string.noImage));
-//                }
-//            }
-//        }
-//    }
-
-//    private void printToast(String message) {
-//        //get active context
-//        Context c = getApplicationContext();
-//        //set length for message to be displayed
-//        int duration = Toast.LENGTH_LONG;
-//        //create message based on input parameter then display it
-//        Toast error = Toast.makeText(c, message, duration);
-//        error.show();
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -181,6 +136,7 @@ public class ToonDetail extends Activity {
 
     @Override
     public void onSaveInstanceState(@NotNull Bundle savedInstanceState){
+        Log.i(TAG, "Saving Instance Data");
         savedInstanceState.putString(STATE_CLASS, extras.getString("class"));
         savedInstanceState.putString(STATE_COLOR, extras.getString("color"));
         savedInstanceState.putString(STATE_LEVEL, extras.getString("level"));
@@ -196,6 +152,18 @@ public class ToonDetail extends Activity {
 
     @Override
     public void onRestoreInstanceState (@NotNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
+        Log.i(TAG, "Restoring Instacne State");
+        toonClass.setText(savedInstanceState.getString(STATE_CLASS));
+        toonClass.setTextColor(Color.parseColor(savedInstanceState.getString(STATE_COLOR)));
+        toonLevel.setText(savedInstanceState.getString(STATE_LEVEL));
+        toonName.setText(savedInstanceState.getString(STATE_NAME));
+        toonRace.setText(savedInstanceState.getString(STATE_RACE));
+        toonRole.setText(savedInstanceState.getString(STATE_ROLE));
+        toonSpec.setText(savedInstanceState.getString(STATE_SPEC));
+        mySmartImage.setImageUrl("http://us.battle.net/static-render/us/"+savedInstanceState.getString(STATE_IMG));
+        mySmartImage.setVisibility(View.VISIBLE);
+        toonRatingBar.setRating(Float.valueOf(savedInstanceState.getString(STATE_RATE)));
     }
 }

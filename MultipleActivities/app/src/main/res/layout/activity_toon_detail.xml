@@ -57,14 +57,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/toonLevelLabel"
-        android:layout_below="@+id/detailToonImg"
+        android:layout_below="@+id/smartToonImg"
         android:text="@string/levelLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/detailToonImg"
+        android:layout_below="@+id/smartToonImg"
         android:layout_alignParentRight="true"
         android:text="@string/toonLevel"
         android:id="@+id/detailToonLevel"
