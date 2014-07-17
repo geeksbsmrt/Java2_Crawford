@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.adamcrawford.multipleactivities.R;
 import com.adamcrawford.multipleactivities.data.ImageSync;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.ref.WeakReference;
 
 
@@ -31,6 +33,16 @@ public class ToonDetail extends Activity {
     private ImageView toonImg;
     private int toonRating;
     private String tnName;
+    static final String STATE_CLASS = "toonClass";
+    static final String STATE_LEVEL = "toonLevel";
+    static final String STATE_NAME = "toonName";
+    static final String STATE_RACE = "toonRace";
+    static final String STATE_ROLE = "toonRole";
+    static final String STATE_SPEC = "toonSpec";
+    static final String STATE_RATE = "toonRating";
+    static final String STATE_IMG = "toonImg";
+    static final String STATE_COLOR = "toonColor";
+    Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +101,7 @@ public class ToonDetail extends Activity {
 
 
 
-        Bundle extras = getIntent().getExtras();
+        extras = getIntent().getExtras();
         if (extras != null) {
             toonClass.setText(extras.getString("class"));
             toonLevel.setText(extras.getString("level"));
@@ -174,5 +186,25 @@ public class ToonDetail extends Activity {
         data.putExtra("name", tnName);
         setResult(RESULT_OK, data);
         super.finish();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle savedInstanceState){
+        savedInstanceState.putString(STATE_CLASS, extras.getString("class"));
+        savedInstanceState.putString(STATE_COLOR, extras.getString("color"));
+        savedInstanceState.putString(STATE_LEVEL, extras.getString("level"));
+        savedInstanceState.putString(STATE_NAME, extras.getString("name"));
+        savedInstanceState.putString(STATE_RACE, extras.getString("race"));
+        savedInstanceState.putString(STATE_ROLE, extras.getString("role"));
+        savedInstanceState.putString(STATE_SPEC, extras.getString("spec"));
+        savedInstanceState.putString(STATE_IMG, extras.getString("icon"));
+        savedInstanceState.putString(STATE_RATE, String.valueOf(toonRating));
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState (@NotNull Bundle savedInstanceState) {
+
     }
 }
