@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     private ListView charList;
     private static String TAG = "MainActivity";
     private Context context = this;
+    public static Context sContext;
     static File env = Environment.getDataDirectory();
     static String fPath;
     static File storedFile;
@@ -53,6 +54,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sContext = this;
 
         final Boolean isConnected = getStatus(this);
         charList = (ListView) findViewById(R.id.charList);
@@ -208,5 +211,9 @@ public class MainActivity extends Activity {
                 }
             }
         }
+    }
+
+    public static Context getContext () {
+        return sContext;
     }
 }

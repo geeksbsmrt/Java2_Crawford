@@ -7,6 +7,9 @@ package com.adamcrawford.multipleactivities.toon;
  * File:    ToonConstructor
  * Purpose: TODO Minimum 2 sentence description
  */
+import com.adamcrawford.multipleactivities.MainActivity;
+import com.adamcrawford.multipleactivities.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,8 +123,13 @@ public class ToonConstructor
             this.tnColor = CharClass.values()[object.getJSONObject("character").getInt("class")].getToonColor();
             this.tnRace = CharRace.values()[object.getJSONObject("character").getInt("race")].getToonRace();
             this.tnGender = CharGender.values()[object.getJSONObject("character").getInt("gender")].getToonGender();
-            this.toonRole = object.getJSONObject("character").getJSONObject("spec").getString("role");
-            this.toonSpec = object.getJSONObject("character").getJSONObject("spec").getString("name");
+            if (object.getJSONObject("character").has("spec")) {
+                this.toonRole = object.getJSONObject("character").getJSONObject("spec").getString("role");
+                this.toonSpec = object.getJSONObject("character").getJSONObject("spec").getString("name");
+            } else {
+                this.toonRole = MainActivity.getContext().getString(R.string.none);
+                this.toonSpec = MainActivity.getContext().getString(R.string.none);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
