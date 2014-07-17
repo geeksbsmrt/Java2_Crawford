@@ -1,36 +1,25 @@
 package com.adamcrawford.multipleactivities.toon;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Messenger;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.adamcrawford.multipleactivities.R;
-import com.adamcrawford.multipleactivities.data.ImageSync;
+import com.adamcrawford.multipleactivities.data.image.SmartImageView;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.ref.WeakReference;
 
 
 public class ToonDetail extends Activity {
     private String TAG = "ToonDetail";
-    private ImageView toonImg;
     private int toonRating;
     private String tnName;
     static final String STATE_CLASS = "toonClass";
@@ -55,11 +44,10 @@ public class ToonDetail extends Activity {
         TextView toonRace = (TextView) findViewById(R.id.detailToonRace);
         TextView toonRole = (TextView) findViewById(R.id.detailToonRole);
         TextView toonSpec = (TextView) findViewById(R.id.detailToonSpec);
-        toonImg = (ImageView) findViewById(R.id.detailToonImg);
+        SmartImageView mySmartImage = (SmartImageView) findViewById(R.id.smartToonImg);
         RatingBar toonRatingBar = (RatingBar) findViewById(R.id.toonRating);
         Button getWebInfo = (Button) findViewById(R.id.getWebInfo);
         Button share = (Button) findViewById(R.id.shareToon);
-
 
         getWebInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +87,6 @@ public class ToonDetail extends Activity {
             }
         });
 
-
-
         extras = getIntent().getExtras();
         if (extras != null) {
             toonClass.setText(extras.getString("class"));
@@ -111,7 +97,9 @@ public class ToonDetail extends Activity {
             toonSpec.setText(extras.getString("spec"));
             toonClass.setTextColor(Color.parseColor(extras.getString("color")));
             if (extras.getString("connected").equals("true")) {
-                getData(extras.getString("icon"));
+                //getData(extras.getString("icon"), extras.getString("name"));
+                mySmartImage.setImageUrl("http://us.battle.net/static-render/us/"+extras.getString("icon"));
+                mySmartImage.setVisibility(View.VISIBLE);
             }
             tnName = extras.getString("name");
         } else {
@@ -119,54 +107,57 @@ public class ToonDetail extends Activity {
         }
     }
 
-    private void getData(String img) {
-        Intent getImg = new Intent(this, ImageSync.class);
-        getImg.putExtra("img", img);
+//    private void getData(String img, String name) {
+//        Intent getImg = new Intent(this, ImageSync.class);
+//        getImg.putExtra("img", img);
+//        getImg.putExtra("name", name);
+//
+//        final DataHandler handler = new DataHandler(this);
+//
+//        Messenger msgr = new Messenger(handler);
+//        getImg.putExtra("msgr", msgr);
+//        startService(getImg);
+//    }
 
-        final DataHandler handler = new DataHandler(this);
+//    private void setImg (Bitmap img) {
+//        //toonImg.setImageBitmap(img);
+//        //toonImg.setVisibility(View.VISIBLE);
+//        mySmartImage.setImageBitmap(img);
+//        mySmartImage.setVisibility(View.VISIBLE);
+//    }
 
-        Messenger msgr = new Messenger(handler);
-        getImg.putExtra("msgr", msgr);
-        startService(getImg);
-    }
+//    private static class DataHandler extends Handler {
+//        private final WeakReference<ToonDetail> toonDetailWeakReference;
+//        public DataHandler(ToonDetail activity) {
+//            toonDetailWeakReference = new WeakReference<ToonDetail>(activity);
+//        }
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            ToonDetail activity = toonDetailWeakReference.get();
+//            if (activity != null) {
+//                Resources res = activity.getResources();
+//                Bitmap returned = (Bitmap) msg.obj;
+//                if (msg.arg1 == RESULT_OK && returned != null) {
+//                    Log.i(activity.TAG, "Data stored");
+//                    activity.setImg(returned);
+//                } else {
+//                    //Log.i(activity.TAG, "File Not Exist");
+//                    activity.printToast(res.getString(R.string.noImage));
+//                }
+//            }
+//        }
+//    }
 
-    private void setImg (Bitmap img) {
-        toonImg.setImageBitmap(img);
-        toonImg.setVisibility(View.VISIBLE);
-    }
-
-    private static class DataHandler extends Handler {
-        private final WeakReference<ToonDetail> toonDetailWeakReference;
-        public DataHandler(ToonDetail activity) {
-            toonDetailWeakReference = new WeakReference<ToonDetail>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            ToonDetail activity = toonDetailWeakReference.get();
-            if (activity != null) {
-                Resources res = activity.getResources();
-                Bitmap returned = (Bitmap) msg.obj;
-                if (msg.arg1 == RESULT_OK && returned != null) {
-                    Log.i(activity.TAG, "Data stored");
-                    activity.setImg(returned);
-                } else {
-                    //Log.i(activity.TAG, "File Not Exist");
-                    activity.printToast(res.getString(R.string.noImage));
-                }
-            }
-        }
-    }
-
-    private void printToast(String message) {
-        //get active context
-        Context c = getApplicationContext();
-        //set length for message to be displayed
-        int duration = Toast.LENGTH_LONG;
-        //create message based on input parameter then display it
-        Toast error = Toast.makeText(c, message, duration);
-        error.show();
-    }
+//    private void printToast(String message) {
+//        //get active context
+//        Context c = getApplicationContext();
+//        //set length for message to be displayed
+//        int duration = Toast.LENGTH_LONG;
+//        //create message based on input parameter then display it
+//        Toast error = Toast.makeText(c, message, duration);
+//        error.show();
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -38,6 +38,19 @@
         android:id="@+id/detailToonImg"
         android:contentDescription="@string/toonImg"
         android:layout_below="@+id/toonRating"
+        android:visibility="gone"
+        />
+    <com.adamcrawford.multipleactivities.data.image.SmartImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/blankprofilepic"
+        android:id="@+id/smartToonImg"
+        android:contentDescription="@string/toonImg"
+        android:layout_below="@+id/toonRating"
+        android:visibility="gone"
         />
 
     <TextView

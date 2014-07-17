@@ -20,7 +20,6 @@
         </activity>
 
         <service android:name=".data.SyncService" />
-        <service android:name=".data.ImageSync" />
 
         <activity
             android:name=".toon.ToonDetail"

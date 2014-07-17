@@ -64,7 +64,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/annotations.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/annotations.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

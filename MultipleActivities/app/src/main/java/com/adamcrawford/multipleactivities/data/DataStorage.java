@@ -7,6 +7,7 @@ package com.adamcrawford.multipleactivities.data;
  * File:    DataStorage
  * Purpose: TODO Minimum 2 sentence description
  */
+
 import android.content.Context;
 import android.util.Log;
 
@@ -42,6 +43,7 @@ public class DataStorage {
             e.printStackTrace();
         }
     }
+
     public String readFile (String fileName, Context context){
         Log.i("Reading file: ", fileName);
         try {
