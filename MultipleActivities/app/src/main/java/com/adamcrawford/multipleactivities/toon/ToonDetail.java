@@ -6,13 +6,17 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,8 @@ import java.lang.ref.WeakReference;
 public class ToonDetail extends Activity {
     private String TAG = "ToonDetail";
     private ImageView toonImg;
+    private int toonRating;
+    private String tnName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,50 @@ public class ToonDetail extends Activity {
         TextView toonRole = (TextView) findViewById(R.id.detailToonRole);
         TextView toonSpec = (TextView) findViewById(R.id.detailToonSpec);
         toonImg = (ImageView) findViewById(R.id.detailToonImg);
+        RatingBar toonRatingBar = (RatingBar) findViewById(R.id.toonRating);
+        Button getWebInfo = (Button) findViewById(R.id.getWebInfo);
+        Button share = (Button) findViewById(R.id.shareToon);
+
+
+        getWebInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String pageString = "http://us.battle.net/wow/en/character/llane/" + tnName.toLowerCase() +"/simple";
+                Log.i(TAG, pageString);
+                Uri toonPage = Uri.parse(pageString);
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, toonPage);
+                Intent chooser = Intent.createChooser(webIntent, tnName + " Web Page");
+                if (webIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(chooser);
+                }
+            }
+        });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String pageString = "http://us.battle.net/wow/en/character/llane/" + tnName.toLowerCase() +"/simple";
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.putExtra(Intent.EXTRA_EMAIL, new String[]{"WoWGuildMembers@adamcrawford.com"});
+                email.putExtra(Intent.EXTRA_SUBJECT, tnName);
+                email.putExtra(Intent.EXTRA_TEXT, pageString);
+                email.setType("message/rfc822");
+                Intent chooser = Intent.createChooser(email, "Send with:");
+                if (email.resolveActivity(getPackageManager()) != null) {
+                    startActivity(chooser);
+                }
+            }
+        });
+
+        toonRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                toonRating = (int) rating;
+                Log.i(TAG, String.valueOf(toonRating));
+            }
+        });
+
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -51,6 +101,7 @@ public class ToonDetail extends Activity {
             if (extras.getString("connected").equals("true")) {
                 getData(extras.getString("icon"));
             }
+            tnName = extras.getString("name");
         } else {
             Log.wtf(TAG, "Got here without data.");
         }
@@ -89,7 +140,7 @@ public class ToonDetail extends Activity {
                     //TODO get image
                     activity.setImg(returned);
                 } else {
-                    Log.i(activity.TAG, "File Not Exist");
+                    //Log.i(activity.TAG, "File Not Exist");
                     activity.printToast(res.getString(R.string.noImage));
                 }
             }
@@ -104,5 +155,26 @@ public class ToonDetail extends Activity {
         //create message based on input parameter then display it
         Toast error = Toast.makeText(c, message, duration);
         error.show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish() {
+        Log.i(TAG, "FINISHING");
+        Intent data = new Intent();
+        //TODO put info into data
+        data.putExtra("rating", String.valueOf(toonRating));
+        data.putExtra("name", tnName);
+        setResult(RESULT_OK, data);
+        super.finish();
     }
 }

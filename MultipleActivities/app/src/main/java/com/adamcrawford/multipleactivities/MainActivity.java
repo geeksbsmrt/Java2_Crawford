@@ -1,7 +1,9 @@
 package com.adamcrawford.multipleactivities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -63,7 +65,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ToonConstructor toon = (ToonConstructor) charList.getItemAtPosition(i);
-                Log.i(TAG, toon.toonName);
+                //Log.i(TAG, toon.toonName);
                 Intent intent = new Intent(context, ToonDetail.class);
                 intent.putExtra("name", toon.toonName);
                 intent.putExtra("level", toon.toonLevel);
@@ -128,7 +130,7 @@ public class MainActivity extends Activity {
     //method to output values to list
     private void writeList (JSONObject data) {
 
-        Log.i("Write List Data: ",data.toString());
+        //Log.i("Write List Data: ",data.toString());
 
         //create string array
         ArrayList<ToonConstructor> toonNames = new ArrayList<ToonConstructor>();
@@ -138,7 +140,7 @@ public class MainActivity extends Activity {
             //get members array out of returned JSON object
             JSONArray dataArray = data.getJSONArray("members");
 
-            Log.i("DataArray Members: ", dataArray.toString());
+            //Log.i("DataArray Members: ", dataArray.toString());
             //loop through array putting member names into string array
             for (int i=0, j=dataArray.length(); i<j; i++) {
                 JSONObject toon = (JSONObject) dataArray.get(i);
@@ -146,7 +148,7 @@ public class MainActivity extends Activity {
                 toonNames.add(tc);
             }
 
-            Log.i("ToonNames: ", toonNames.toString());
+            //Log.i("ToonNames: ", toonNames.toString());
 
             //build listAdapter
             ToonAdapter guildListAdapter = new ToonAdapter(this, R.id.charList, toonNames);
@@ -215,5 +217,30 @@ public class MainActivity extends Activity {
 
     public static Context getContext () {
         return sContext;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "In Activity Result");
+        if (resultCode == RESULT_OK && requestCode == 0) {
+            Bundle extras = data.getExtras();
+            //Log.i(TAG, extras.getString("rating"));
+            String toonRating = extras.getString("rating");
+            String tnName = extras.getString("name");
+            //TODO Display alert
+            displayRating(tnName, toonRating);
+        }
+    }
+
+    public void displayRating (String name, String rating) {
+        AlertDialog.Builder displayRating = new AlertDialog.Builder(this);
+        displayRating.setTitle("Character: " + name).setMessage("Rating: " + rating).setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        displayRating.create();
+        displayRating.show();
     }
 }

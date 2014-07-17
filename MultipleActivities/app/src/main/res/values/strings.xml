@@ -22,5 +22,7 @@
     <string name="title_activity_toon_detail">Toon Detail</string>
     <string name="noImage">Image not found on server</string>
     <string name="none">None</string>
+    <string name="getWebInfo">More Info</string>
+    <string name="share">Share</string>
 
 </resources>

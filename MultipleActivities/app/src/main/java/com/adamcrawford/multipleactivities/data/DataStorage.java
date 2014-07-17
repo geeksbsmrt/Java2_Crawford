@@ -56,7 +56,7 @@ public class DataStorage {
                 content = new String(contentBytes, 0, bytesRead);
                 contentBuffer.append(content);
             }
-            Log.i("Data Storage", String.valueOf(contentBuffer));
+            //Log.i("Data Storage", String.valueOf(contentBuffer));
             return String.valueOf(contentBuffer);
         } catch (FileNotFoundException e) {
             Log.e("DS: ", "FNFE");

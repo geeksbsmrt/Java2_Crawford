@@ -38,7 +38,6 @@
         android:id="@+id/detailToonImg"
         android:contentDescription="@string/toonImg"
         android:layout_below="@+id/toonRating"
-        android:visibility="gone"
         />
 
     <TextView
@@ -65,14 +64,14 @@
         android:text="@string/raceLabel"
         android:id="@+id/toonRaceLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/detailToonLevel"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/toonRace"
         android:id="@+id/detailToonRace"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -83,7 +82,7 @@
         android:layout_below="@+id/toonRaceLabel"
         android:text="@string/classLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:id="@+id/toonClassLable"
         />
     <TextView
@@ -91,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/detailToonRace"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/toonClass"
         android:id="@+id/detailToonClass"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -103,14 +102,14 @@
         android:text="@string/roleLabel"
         android:id="@+id/toonRoleLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/detailToonClass"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/toonRole"
         android:id="@+id/detailToonRole"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -122,17 +121,35 @@
         android:text="@string/specLabel"
         android:id="@+id/toonSpecLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/detailToonRole"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/toonSpec"
         android:id="@+id/detailToonSpec"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/detailToonSpec"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/getWebInfo"
+        android:text="@string/getWebInfo"
+        android:layout_marginTop="5dp"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/getWebInfo"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/shareToon"
+        android:text="@string/share"
+        android:layout_marginTop="5dp"
         />
 
 </RelativeLayout>
