@@ -18,6 +18,14 @@ import com.adamcrawford.multipleactivities.data.image.SmartImageView;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Author:  Adam Crawford
+ * Project: MultipleActivities
+ * Package: com.adamcrawford.multipleActivities
+ * File:    MainActivity
+ * Purpose: Controls data on the ToonDetail page.  Is passed toon information based on which character is selected from MainActivity.  Passes back the toon rating selected by the user.
+ */
+
 public class ToonDetail extends Activity {
     private String TAG = "ToonDetail";
     private int toonRating;

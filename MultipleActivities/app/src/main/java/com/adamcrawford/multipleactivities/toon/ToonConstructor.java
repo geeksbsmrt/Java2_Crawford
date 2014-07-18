@@ -5,7 +5,7 @@ package com.adamcrawford.multipleactivities.toon;
  * Project: Multiple Activities
  * Package: com.adamcrawford.multipleactivities.toon
  * File:    ToonConstructor
- * Purpose: TODO Minimum 2 sentence description
+ * Purpose: Builds toon objects based on data passed in.
  */
 import com.adamcrawford.multipleactivities.MainActivity;
 import com.adamcrawford.multipleactivities.R;

@@ -5,7 +5,7 @@ package com.adamcrawford.multipleactivities.toon;
  * Project: Multiple Activities
  * Package: com.adamcrawford.multipleactivities.toon
  * File:    ToonAdapter
- * Purpose: TODO Minimum 2 sentence description
+ * Purpose: Adapter for ToonList on MainActivity.  Receives an Array of ToonConstructors.
  */
 import android.content.Context;
 import android.graphics.Color;

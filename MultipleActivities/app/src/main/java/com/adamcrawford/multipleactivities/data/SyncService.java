@@ -5,7 +5,7 @@ package com.adamcrawford.multipleactivities.data;
  * Project: Multiple Activities
  * Package: com.adamcrawford.multipleactivities.data
  * File:    SyncService
- * Purpose: TODO Minimum 2 sentence description
+ * Purpose: Syncronizes the guild information from the internet.
  */
 import android.app.IntentService;
 import android.content.Intent;

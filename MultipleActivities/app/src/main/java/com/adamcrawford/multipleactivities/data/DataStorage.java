@@ -5,7 +5,7 @@ package com.adamcrawford.multipleactivities.data;
  * Project: Multiple Activities
  * Package: com.adamcrawford.multipleactivities.data
  * File:    DataStorage
- * Purpose: TODO Minimum 2 sentence description
+ * Purpose: Reads and writes data from the specified file.
  */
 
 import android.content.Context;
