@@ -25,6 +25,7 @@ import com.adamcrawford.multipleactivities.toon.ToonAdapter;
 import com.adamcrawford.multipleactivities.toon.ToonConstructor;
 import com.adamcrawford.multipleactivities.toon.ToonDetail;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,58 +52,67 @@ public class MainActivity extends Activity {
     static String fPath;
     static File storedFile;
     static String absPath;
+    ArrayList<ToonConstructor> toonNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sContext = this;
-
-        final Boolean isConnected = getStatus(this);
-        charList = (ListView) findViewById(R.id.charList);
-        charList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ToonConstructor toon = (ToonConstructor) charList.getItemAtPosition(i);
-                //Log.i(TAG, toon.toonName);
-                Intent intent = new Intent(context, ToonDetail.class);
-                intent.putExtra("name", toon.toonName);
-                intent.putExtra("level", toon.toonLevel);
-                intent.putExtra("icon", toon.toonIcon);
-                intent.putExtra("class", toon.tnClass);
-                intent.putExtra("color", toon.tnColor);
-                intent.putExtra("race", toon.tnRace);
-                intent.putExtra("role", toon.toonRole);
-                intent.putExtra("spec", toon.toonSpec);
-                intent.putExtra("connected", isConnected.toString());
-
-                startActivityForResult(intent, 0);
-            }
-        });
-
-        // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
-        String fName = String.format("%s_%s", "Llane", "Remnants of Sanity");
-
-        env = Environment.getDataDirectory();
-        fPath = String.format("%s/data/%s/files/%s", env, this.getPackageName(), fName.toLowerCase());
-        storedFile = new File(fPath);
-        absPath = String.format("Reading File: %s", storedFile.getAbsolutePath()) ;
-        if (isConnected) {
-            // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
-            getData("remnants%20of%20sanity");
-        } else {
-            //Throw not connected message
-            Log.i(TAG, "You are not connected");
-            printToast(getString(R.string.notConnected));
-            if (storedFile.exists()) {
-                printToast(getString(R.string.staticData));
-                readFile(fName);
-            }  else {
-                Log.i(TAG, "File Not Exist");
-                printToast(getString(R.string.noLocal));
+        if (savedInstanceState != null){
+            if (savedInstanceState.containsKey("toonNames")) {
+                Log.e(TAG, savedInstanceState.getSerializable("toonNames").toString());
             }
         }
+
+            sContext = this;
+
+            final Boolean isConnected = getStatus(this);
+            charList = (ListView) findViewById(R.id.charList);
+            charList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    ToonConstructor toon = (ToonConstructor) charList.getItemAtPosition(i);
+                    //Log.i(TAG, toon.toonName);
+                    Intent intent = new Intent(context, ToonDetail.class);
+                    intent.putExtra("name", toon.toonName);
+                    intent.putExtra("level", toon.toonLevel);
+                    intent.putExtra("icon", toon.toonIcon);
+                    intent.putExtra("class", toon.tnClass);
+                    intent.putExtra("color", toon.tnColor);
+                    intent.putExtra("race", toon.tnRace);
+                    intent.putExtra("role", toon.toonRole);
+                    intent.putExtra("spec", toon.toonSpec);
+                    intent.putExtra("connected", isConnected.toString());
+
+                    startActivityForResult(intent, 0);
+                }
+            });
+
+            // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
+            String fName = String.format("%s_%s", "Llane", "Remnants of Sanity");
+
+            env = Environment.getDataDirectory();
+            fPath = String.format("%s/data/%s/files/%s", env, this.getPackageName(), fName.toLowerCase());
+            storedFile = new File(fPath);
+            absPath = String.format("Reading File: %s", storedFile.getAbsolutePath());
+            if (isConnected) {
+                if ((savedInstanceState == null) || (!savedInstanceState.containsKey("toonNames"))) {
+                    // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
+                    getData("remnants%20of%20sanity");
+                }
+            } else {
+                //Throw not connected message
+                Log.i(TAG, "You are not connected");
+                printToast(getString(R.string.notConnected));
+                if (storedFile.exists()) {
+                    printToast(getString(R.string.staticData));
+                    readFile(fName);
+                } else {
+                    Log.i(TAG, "File Not Exist");
+                    printToast(getString(R.string.noLocal));
+                }
+            }
     }
 
     //method to check for connectivity
@@ -133,7 +143,7 @@ public class MainActivity extends Activity {
         //Log.i("Write List Data: ",data.toString());
 
         //create string array
-        ArrayList<ToonConstructor> toonNames = new ArrayList<ToonConstructor>();
+        toonNames = new ArrayList<ToonConstructor>();
 
         try {
 
@@ -242,5 +252,34 @@ public class MainActivity extends Activity {
         });
         displayRating.create();
         displayRating.show();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle savedInstanceState){
+        Log.i(TAG, "Saving Instance Data");
+        if (toonNames != null && !toonNames.isEmpty()) {
+            savedInstanceState.putSerializable("toonNames", toonNames);
+        }
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState (@NotNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Log.i(TAG, "Restoring Instacne State");
+         if (savedInstanceState.containsKey("toonNames")) {
+             if (savedInstanceState.getSerializable("toonNames") instanceof ArrayList<?>){
+                 //Unchecked Cast Warning.  Could not find a good way around this.  This key will always contain the correct cast
+                 toonNames = (ArrayList<ToonConstructor>) savedInstanceState.getSerializable("toonNames");
+             }
+             if (toonNames != null) {
+                 Log.i(TAG, toonNames.toString());
+                 ToonAdapter adapter = new ToonAdapter(this, R.id.charList, toonNames);
+                 charList.setAdapter(adapter);
+                 charList.setVisibility(View.VISIBLE);
+                 //adapter.notifyDataSetChanged();
+             }
+        }
     }
 }
