@@ -13,7 +13,9 @@ import com.adamcrawford.multipleactivities.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ToonConstructor
+import java.io.Serializable;
+
+public class ToonConstructor implements Serializable
 {
     public String toonName;
     public String toonIcon;
