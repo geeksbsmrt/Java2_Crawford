@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WoW Guild Members</string>
+    <string name="notConnected">Active Internet connection required for latest information.</string>
+    <string name="toonName">toonName</string>
+    <string name="toonLevel">toonLevel</string>
+    <string name="toonClass">toonClass</string>
+    <string name="appDesc">Members of: Llane - Remnants of Sanity</string>
+    <string name="staticData">Using data stored locally</string>
+    <string name="noLocal">No information stored on device</string>
+    <string name="notReturned">No information returned from network</string>
+    <string name="toonImg">Current toon image</string>
+    <string name="levelLabel">Level: </string>
+    <string name="classLabel">Class: </string>
+    <string name="roleLabel">Role: </string>
+    <string name="specLabel">Spec: </string>
+    <string name="toonRole">toonRole</string>
+    <string name="raceLabel">Race: </string>
+    <string name="toonRace">toonRace</string>
+    <string name="toonSpec">toonSpec</string>
+    <string name="title_activity_toon_detail">Toon Detail</string>
+    <string name="noImage">Image not found on server</string>
+    <string name="none">None</string>
+    <string name="getWebInfo">More Info</string>
+    <string name="share">Share</string>
+
+</resources>
