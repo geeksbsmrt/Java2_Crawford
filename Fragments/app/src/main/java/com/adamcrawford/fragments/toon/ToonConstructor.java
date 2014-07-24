@@ -7,6 +7,7 @@ package com.adamcrawford.fragments.toon;
  * File:    ToonConstructor
  * Purpose: Builds toon objects based on data passed in.
  */
+
 import com.adamcrawford.fragments.MainActivity;
 import com.adamcrawford.fragments.R;
 
@@ -15,8 +16,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class ToonConstructor implements Serializable
-{
+public class ToonConstructor implements Serializable {
     public String toonName;
     public String toonIcon;
     public String toonLevel;
@@ -54,7 +54,7 @@ public class ToonConstructor implements Serializable
             return toonClass;
         }
 
-        public String getToonColor () {
+        public String getToonColor() {
             return toonColor;
         }
 
@@ -95,7 +95,7 @@ public class ToonConstructor implements Serializable
             toonRace = tRace;
         }
 
-        public String getToonRace () {
+        public String getToonRace() {
             return toonRace;
         }
     }
@@ -115,7 +115,7 @@ public class ToonConstructor implements Serializable
         }
     }
 
-    public ToonConstructor (JSONObject object) {
+    public ToonConstructor(JSONObject object) {
 
         try {
             this.toonName = object.getJSONObject("character").getString("name");

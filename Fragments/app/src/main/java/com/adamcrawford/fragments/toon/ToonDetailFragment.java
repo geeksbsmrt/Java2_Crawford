@@ -1,110 +1,136 @@
 package com.adamcrawford.fragments.toon;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.adamcrawford.fragments.R;
+import com.adamcrawford.fragments.data.image.SmartImageView;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ToonDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ToonDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
+ * Author:  Adam Crawford
+ * Project: Fragments
+ * Package: com.adamcrawford.fragments
+ * File:    ToonDetailsFragment
+ * Purpose: Controls ToonDetail UI, OnClick Functionality.
  */
+
 public class ToonDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String TAG = "TDF: ";
+    public int toonRating;
+    public String tnName;
+    public TextView toonClass;
+    public TextView toonLevel;
+    public TextView toonName;
+    public TextView toonRace;
+    public TextView toonRole;
+    public TextView toonSpec;
+    public SmartImageView mySmartImage;
+    public RatingBar toonRatingBar;
 
-    private OnFragmentInteractionListener mListener;
+    public interface onToonLoaded {
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ToonDetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ToonDetailFragment newInstance(String param1, String param2) {
-        ToonDetailFragment fragment = new ToonDetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-    public ToonDetailFragment() {
-        // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private onToonLoaded parentActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_toon_detail, container, false);
-    }
+        Log.i(TAG, "Inflating TDF");
+        View myView = inflater.inflate(R.layout.activity_toon_detail, container);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        toonClass = (TextView) myView.findViewById(R.id.detailToonClass);
+        toonLevel = (TextView) myView.findViewById(R.id.detailToonLevel);
+        toonName = (TextView) myView.findViewById(R.id.detailToonName);
+        toonRace = (TextView) myView.findViewById(R.id.detailToonRace);
+        toonRole = (TextView) myView.findViewById(R.id.detailToonRole);
+        toonSpec = (TextView) myView.findViewById(R.id.detailToonSpec);
+        mySmartImage = (SmartImageView) myView.findViewById(R.id.smartToonImg);
+        toonRatingBar = (RatingBar) myView.findViewById(R.id.toonRating);
+        Button getWebInfo = (Button) myView.findViewById(R.id.getWebInfo);
+        Button share = (Button) myView.findViewById(R.id.shareToon);
+
+        getWebInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String pageString = "http://us.battle.net/wow/en/character/llane/" + tnName.toLowerCase() + "/simple";
+                Log.i(TAG, pageString);
+                Uri toonPage = Uri.parse(pageString);
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, toonPage);
+                Intent chooser = Intent.createChooser(webIntent, tnName + " Web Page");
+                if (webIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(chooser);
+                }
+            }
+        });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String pageString = "http://us.battle.net/wow/en/character/llane/" + tnName.toLowerCase() + "/simple";
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.putExtra(Intent.EXTRA_EMAIL, new String[]{"WoWGuildMembers@adamcrawford.com"});
+                email.putExtra(Intent.EXTRA_SUBJECT, tnName);
+                email.putExtra(Intent.EXTRA_TEXT, pageString);
+                email.setType("message/rfc822");
+                Intent chooser = Intent.createChooser(email, "Send with:");
+                if (email.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(chooser);
+                }
+            }
+        });
+
+        toonRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                toonRating = (int) rating;
+                Log.i(TAG, String.valueOf(toonRating));
+            }
+        });
+
+        return myView;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+        if (activity instanceof onToonLoaded) {
+            try {
+                parentActivity = (onToonLoaded) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnToonSelected");
+            }
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void displayToon(Bundle toon) {
+        toonClass.setText(toon.getString("class"));
+        toonLevel.setText(toon.getString("level"));
+        toonName.setText(toon.getString("name"));
+        toonRace.setText(toon.getString("race"));
+        toonRole.setText(toon.getString("role"));
+        toonSpec.setText(toon.getString("spec"));
+        toonClass.setTextColor(Color.parseColor(toon.getString("color")));
+        if (toon.getString("connected").equals("true")) {
+            mySmartImage.setImageUrl("http://us.battle.net/static-render/us/" + toon.getString("icon"));
+            mySmartImage.setVisibility(View.VISIBLE);
+        }
+        tnName = toon.getString("name");
+        //reset rating
+        toonRatingBar.setRating(0);
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-
 }

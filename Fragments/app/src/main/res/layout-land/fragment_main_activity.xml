@@ -1,23 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.adamcrawford.fragments.MainActivityFragment">
+    android:baselineAligned="false">
 
     <!-- TODO: Update blank fragment layout -->
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/mainFragment"
+        android:id="@+id/MainActivityFragment"
         android:layout_weight="1"
-        android:name="com.adamcrawford.fragments.MainActivityFragment"
-        tools:layout="@layout/fragment_main_activity" />
+        android:name="com.adamcrawford.fragments.MainActivityFragment"/>
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:id="@+id/detailFragment"
-    />
+        android:id="@+id/toonDetailFragment"
+        android:name="com.adamcrawford.fragments.toon.ToonDetailFragment"
+        android:visibility="invisible"/>
 
 </LinearLayout>

@@ -30,7 +30,7 @@ public class DataStorage {
     private DataStorage() {
     }
 
-    public void writeFile (String fileName, String data, Context context) {
+    public void writeFile(String fileName, String data, Context context) {
 
         try {
             FileOutputStream fos = context.openFileOutput(fileName.toLowerCase(), Context.MODE_PRIVATE);
@@ -44,7 +44,7 @@ public class DataStorage {
         }
     }
 
-    public String readFile (String fileName, Context context){
+    public String readFile(String fileName, Context context) {
         Log.i("Reading file: ", fileName);
         try {
             FileInputStream fis = context.openFileInput(fileName.toLowerCase());

@@ -7,6 +7,7 @@ package com.adamcrawford.fragments.data;
  * File:    SyncService
  * Purpose: Syncronizes the guild information from the internet.
  */
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,7 +63,7 @@ public class SyncService extends IntentService {
         }
     }
 
-    private JSONObject getData (String guildName) {
+    private JSONObject getData(String guildName) {
         JSONObject members = null;
         URL url;
         StringBuffer contentBuffer = null;
@@ -94,7 +95,7 @@ public class SyncService extends IntentService {
 
                 //while data is incoming from the HTTPRequest append data to the string buffer
                 //BIS returns -1 when end of content reached
-                while ((byteRead = bin.read(connBytes)) != - 1) {
+                while ((byteRead = bin.read(connBytes)) != -1) {
                     content = new String(connBytes, 0, byteRead);
                     contentBuffer.append(content);
                 }

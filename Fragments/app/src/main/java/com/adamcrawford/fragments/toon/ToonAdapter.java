@@ -7,6 +7,7 @@ package com.adamcrawford.fragments.toon;
  * File:    ToonAdapter
  * Purpose: Adapter for ToonList on MainActivity.  Receives an Array of ToonConstructors.
  */
+
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -20,13 +21,11 @@ import com.adamcrawford.fragments.R;
 import java.util.ArrayList;
 
 
-public class ToonAdapter extends ArrayAdapter<ToonConstructor>
-{
+public class ToonAdapter extends ArrayAdapter<ToonConstructor> {
     private Context context;
     private ArrayList<ToonConstructor> objects;
 
-    public ToonAdapter(Context context, int resource, ArrayList<ToonConstructor> objects)
-    {
+    public ToonAdapter(Context context, int resource, ArrayList<ToonConstructor> objects) {
         super(context, resource, objects);
         this.context = context;
         this.objects = objects;
@@ -34,8 +33,7 @@ public class ToonAdapter extends ArrayAdapter<ToonConstructor>
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         ToonConstructor toon = objects.get(position);
 
