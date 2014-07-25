@@ -63,6 +63,7 @@ public class ToonDetailFragment extends Fragment implements View.OnClickListener
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.i(TAG, "Inflating TDF");
+
         View myView = inflater.inflate(R.layout.activity_toon_detail, container);
 
         toonClass = (TextView) myView.findViewById(R.id.detailToonClass);
@@ -88,7 +89,12 @@ public class ToonDetailFragment extends Fragment implements View.OnClickListener
                     Intent data = new Intent();
                     data.putExtra("rating", String.valueOf(toonRating));
                     data.putExtra("name", tnName);
-                    mainParent.onActivityResult(0, Activity.RESULT_OK, data);
+                    try {
+                        mainParent.onActivityResult(0, Activity.RESULT_OK, data);
+                    } catch (NullPointerException e) {
+                        //This throws an NPE when switching from Portrait to Landscape when the rating has been changed
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -98,23 +104,36 @@ public class ToonDetailFragment extends Fragment implements View.OnClickListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_NAME)) {
-            Log.i(TAG, "Restoring Instance State");
-            Log.i(TAG, savedInstanceState.getString(STATE_NAME));
-            toonClass.setText(savedInstanceState.getString(STATE_CLASS));
-            toonClass.setTextColor(Color.parseColor(savedInstanceState.getString(STATE_COLOR)));
-            toonLevel.setText(savedInstanceState.getString(STATE_LEVEL));
-            toonName.setText(savedInstanceState.getString(STATE_NAME));
-            toonRace.setText(savedInstanceState.getString(STATE_RACE));
-            toonRole.setText(savedInstanceState.getString(STATE_ROLE));
-            toonSpec.setText(savedInstanceState.getString(STATE_SPEC));
-            mySmartImage.setImageUrl("http://us.battle.net/static-render/us/" + savedInstanceState.getString(STATE_IMG));
-            mySmartImage.setVisibility(View.VISIBLE);
-            toonRatingBar.setRating(Float.valueOf(savedInstanceState.getString(STATE_RATE)));
+        if (savedInstanceState != null && savedInstanceState.containsKey("DetailSaved")) {
+            Log.i(TAG, "Has saved toon info");
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             Bundle extras = getActivity().getIntent().getExtras();
             displayToon(extras);
         }
+    }
+
+    //called to display the saved toon data.  Breaks code when enabled.
+    private void displaySaved (Bundle savedInstanceState) {
+        Log.i(TAG, "Restoring Instance State");
+        Log.i(TAG, savedInstanceState.getString(STATE_CLASS));
+        Log.i(TAG, savedInstanceState.getString(STATE_NAME));
+        Log.i(TAG, savedInstanceState.getString(STATE_LEVEL));
+        Log.i(TAG, savedInstanceState.getString(STATE_RACE));
+        Log.i(TAG, savedInstanceState.getString(STATE_ROLE));
+        Log.i(TAG, savedInstanceState.getString(STATE_RATE));
+        Log.i(TAG, savedInstanceState.getString(STATE_SPEC));
+        Log.i(TAG, savedInstanceState.getString(STATE_IMG));
+        //typically breaks here but it seems to hit this twice?
+        toonClass.setText(savedInstanceState.getString(STATE_CLASS));
+        toonClass.setTextColor(Color.parseColor(savedInstanceState.getString(STATE_COLOR)));
+        toonLevel.setText(savedInstanceState.getString(STATE_LEVEL));
+        toonName.setText(savedInstanceState.getString(STATE_NAME));
+        toonRace.setText(savedInstanceState.getString(STATE_RACE));
+        toonRole.setText(savedInstanceState.getString(STATE_ROLE));
+        toonSpec.setText(savedInstanceState.getString(STATE_SPEC));
+        mySmartImage.setImageUrl("http://us.battle.net/static-render/us/" + savedInstanceState.getString(STATE_IMG));
+        mySmartImage.setVisibility(View.VISIBLE);
+        toonRatingBar.setRating(Float.valueOf(savedInstanceState.getString(STATE_RATE)));
     }
 
     @Override
@@ -196,6 +215,7 @@ public class ToonDetailFragment extends Fragment implements View.OnClickListener
             savedInstanceState.putString(STATE_IMG, toonBundle.getString("icon"));
             savedInstanceState.putString(STATE_RATE, String.valueOf(toonRating));
         } catch (NullPointerException e) {
+            //throws NPE if switching from Landscape to Portrait without a toon selected.
             e.printStackTrace();
         }
         super.onSaveInstanceState(savedInstanceState);
