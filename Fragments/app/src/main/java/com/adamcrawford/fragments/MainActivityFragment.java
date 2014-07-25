@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.adamcrawford.fragments.toon.ToonAdapter;
 import com.adamcrawford.fragments.toon.ToonConstructor;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,12 +32,14 @@ import java.util.ArrayList;
  */
 
 public class MainActivityFragment extends Fragment {
-    String TAG = "MAF: ";
+    String TAG = "MAF";
     public ListView charList;
     ArrayList<ToonConstructor> toonNames;
 
     public interface OnToonSelected {
         void onToonSelected(ToonConstructor toon, Boolean connected);
+
+        void processData();
     }
 
     private OnToonSelected parentActivity;
@@ -49,6 +52,25 @@ public class MainActivityFragment extends Fragment {
         View myView = inflater.inflate(R.layout.activity_main, container);
 
         charList = (ListView) myView.findViewById(R.id.charList);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey("toonNames")) {
+            if (savedInstanceState.getSerializable("toonNames") instanceof ArrayList<?>) {
+                //Unchecked Cast Warning.  Could not find a good way around this.  This key will always contain the correct cast
+                try {
+                    toonNames = (ArrayList<ToonConstructor>) savedInstanceState.getSerializable("toonNames");
+                } catch (ClassCastException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (toonNames != null) {
+                ToonAdapter adapter = new ToonAdapter(myView.getContext(), R.id.charList, toonNames);
+                charList.setAdapter(adapter);
+                charList.setVisibility(View.VISIBLE);
+            }
+        } else {
+            parentActivity.processData();
+        }
+
         charList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -113,5 +135,14 @@ public class MainActivityFragment extends Fragment {
         });
         displayRating.create();
         displayRating.show();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
+        Log.i(TAG, "Saving Instance Data");
+        if (toonNames != null && !toonNames.isEmpty()) {
+            savedInstanceState.putSerializable("toonNames", toonNames);
+        }
+        super.onSaveInstanceState(savedInstanceState);
     }
 }

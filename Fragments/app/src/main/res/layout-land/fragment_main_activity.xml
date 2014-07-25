@@ -16,7 +16,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:id="@+id/toonDetailFragment"
-        android:name="com.adamcrawford.fragments.toon.ToonDetailFragment"
-        android:visibility="invisible"/>
+        android:name="com.adamcrawford.fragments.toon.ToonDetailFragment" />
 
 </LinearLayout>

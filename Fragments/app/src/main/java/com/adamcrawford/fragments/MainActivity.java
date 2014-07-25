@@ -12,23 +12,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.adamcrawford.fragments.data.DataStorage;
 import com.adamcrawford.fragments.data.SyncService;
-import com.adamcrawford.fragments.toon.ToonAdapter;
 import com.adamcrawford.fragments.toon.ToonConstructor;
 import com.adamcrawford.fragments.toon.ToonDetail;
 import com.adamcrawford.fragments.toon.ToonDetailFragment;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 /**
  * Author:  Adam Crawford
@@ -38,7 +34,7 @@ import java.util.ArrayList;
  * Purpose: Controls application including UI, OnClick Functionality, Network Connectivity, and message handling.
  */
 
-public class MainActivity extends Activity implements MainActivityFragment.OnToonSelected {
+public class MainActivity extends Activity implements MainActivityFragment.OnToonSelected, ToonDetailFragment.onToonLoaded {
 
     private static String TAG = "MainActivity";
     private Context context = this;
@@ -48,9 +44,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     static File storedFile;
     static String absPath;
     public static Boolean isConnected;
-    private ArrayList<ToonConstructor> toonNames;
     private MainActivityFragment maf;
-    private ToonDetailFragment tdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +54,9 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         maf = (MainActivityFragment) getFragmentManager().findFragmentById(R.id.MainActivityFragment);
         sContext = this;
         isConnected = getStatus(this);
+    }
 
+    public void processData() {
         // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
         String fName = "Llane_Remnants of Sanity";
 
@@ -68,11 +64,9 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         fPath = String.format("%s/data/%s/files/%s", env, this.getPackageName(), fName.toLowerCase());
         storedFile = new File(fPath);
         absPath = String.format("Reading File: %s", storedFile.getAbsolutePath());
-        if (isConnected) {
-            if ((savedInstanceState == null) || (!savedInstanceState.containsKey("toonNames"))) {
-                // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
-                getData("remnants%20of%20sanity");
-            }
+        if (getStatus(this)) {
+            // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
+            getData("remnants%20of%20sanity");
         } else {
             //Throw not connected message
             Log.i(TAG, "You are not connected");
@@ -161,7 +155,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG, "In Activity Result");
         if (resultCode == RESULT_OK && requestCode == 0) {
             Bundle extras = data.getExtras();
@@ -169,37 +163,6 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             String toonRating = extras.getString("rating");
             String tnName = extras.getString("name");
             maf.displayRating(tnName, toonRating);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
-        Log.i(TAG, "Saving Instance Data");
-        if (toonNames != null && !toonNames.isEmpty()) {
-            savedInstanceState.putSerializable("toonNames", toonNames);
-        }
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        Log.i(TAG, "Restoring Instacne State");
-        if (savedInstanceState.containsKey("toonNames")) {
-            if (savedInstanceState.getSerializable("toonNames") instanceof ArrayList<?>) {
-                //Unchecked Cast Warning.  Could not find a good way around this.  This key will always contain the correct cast
-                try {
-                    toonNames = (ArrayList<ToonConstructor>) savedInstanceState.getSerializable("toonNames");
-                } catch (ClassCastException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (toonNames != null) {
-                ToonAdapter adapter = new ToonAdapter(this, R.id.charList, toonNames);
-                maf.charList.setAdapter(adapter);
-                maf.charList.setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -221,9 +184,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
 
     public void onToonSelected(ToonConstructor selected, Boolean connected) {
 
-        tdf = (ToonDetailFragment) getFragmentManager().findFragmentById(R.id.toonDetailFragment);
-
-
+        ToonDetailFragment tdf = (ToonDetailFragment) getFragmentManager().findFragmentById(R.id.toonDetailFragment);
 
         if (tdf != null && tdf.isInLayout()) {
             //reset image
@@ -243,6 +204,5 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         } else {
             startActivity(selected, connected);
         }
-
     }
 }
