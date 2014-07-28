@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false">
+
+    <!-- TODO: Update blank fragment layout -->
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/MainActivityFragment"
+        android:layout_weight="1"
+        android:name="com.adamcrawford.actionbar.MainActivityFragment"/>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/toonDetailFragment"
+        android:name="com.adamcrawford.actionbar.toon.ToonDetailFragment" />
+
+</LinearLayout>
