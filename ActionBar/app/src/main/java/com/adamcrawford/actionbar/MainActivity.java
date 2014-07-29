@@ -48,13 +48,15 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     static String absPath;
     public static Boolean isConnected;
     private MainActivityFragment maf;
-    private static final int THEME_DEFAULT = R.style.AppTheme;
-    private static final int THEME_USER = R.style.UserTheme;
-    private static int theme = THEME_DEFAULT;
+    public static final int THEME_DEFAULT = R.style.AppTheme;
+    public static final int THEME_USER = R.style.UserTheme;
+    public static int theme = THEME_DEFAULT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //TODO Pull UserPreference theme, if it exists
         this.applyTheme(this);
         setContentView(R.layout.fragment_main_activity);
 

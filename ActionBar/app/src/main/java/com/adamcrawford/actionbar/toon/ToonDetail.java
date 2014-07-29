@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.adamcrawford.actionbar.MainActivity;
 import com.adamcrawford.actionbar.R;
 
 
@@ -26,7 +27,7 @@ public class ToonDetail extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.setTheme(MainActivity.theme);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Log.i(TAG, "is Landscape");
             isLandscape = true;
