@@ -18,6 +18,7 @@
         android:id="@+id/detailToonName"
         android:gravity="center"
         android:text="@string/toonName"
+        android:textStyle="bold"
         />
 
     <RatingBar
@@ -63,6 +64,7 @@
         android:layout_below="@+id/smartToonImg"
         android:text="@string/levelLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -72,6 +74,7 @@
         android:text="@string/toonLevel"
         android:id="@+id/detailToonLevel"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -81,6 +84,7 @@
         android:id="@+id/toonRaceLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginTop="5dp"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -91,6 +95,7 @@
         android:text="@string/toonRace"
         android:id="@+id/detailToonRace"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -99,7 +104,8 @@
         android:text="@string/classLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginTop="5dp"
-        android:id="@+id/toonClassLable"
+        android:id="@+id/toonClassLabel"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -110,15 +116,21 @@
         android:text="@string/toonClass"
         android:id="@+id/detailToonClass"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:shadowColor="#000000"
+        android:shadowDx="0.0"
+        android:shadowDy="0.0"
+        android:shadowRadius="2.0"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toonClassLable"
+        android:layout_below="@+id/toonClassLabel"
         android:text="@string/roleLabel"
         android:id="@+id/toonRoleLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginTop="5dp"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -129,6 +141,7 @@
         android:text="@string/toonRole"
         android:id="@+id/detailToonRole"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -138,6 +151,7 @@
         android:id="@+id/toonSpecLabel"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginTop="5dp"
+        android:textStyle="bold"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -148,6 +162,7 @@
         android:text="@string/toonSpec"
         android:id="@+id/detailToonSpec"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
         />
     <Button
         android:layout_width="wrap_content"
