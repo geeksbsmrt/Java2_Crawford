@@ -12,6 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.Toast;
 
 import com.adamcrawford.actionbar.data.DataStorage;
@@ -204,5 +206,12 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         } else {
             startActivity(selected, connected);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_main_actions, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

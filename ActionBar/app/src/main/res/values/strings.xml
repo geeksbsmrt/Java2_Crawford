@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WoW Guild Members</string>
+    <string name="app_name">Guild Members</string>
     <string name="notConnected">Active Internet connection required for latest information.</string>
     <string name="toonName">toonName</string>
     <string name="toonLevel">toonLevel</string>
@@ -25,5 +25,8 @@
     <string name="getWebInfo">More Info</string>
     <string name="share">Share</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_search">Search Toons</string>
+    <string name="action_favorite">Favorite Toons</string>
+    <string name="action_prefs">Preferences</string>
 
 </resources>
