@@ -3,6 +3,7 @@ package com.adamcrawford.actionbar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,12 +53,14 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     public static final int THEME_DEFAULT = R.style.AppTheme;
     public static final int THEME_USER = R.style.UserTheme;
     public static int theme = THEME_DEFAULT;
-
-    @Override
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor edit;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //TODO Pull UserPreference theme, if it exists
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        theme = preferences.getInt("theme", THEME_DEFAULT);
         this.applyTheme(this);
         setContentView(R.layout.fragment_main_activity);
 
@@ -240,12 +244,16 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             case R.id.action_prefs: {
                 //TODO Preferences Action
                 Log.i(TAG, "Prefs Action Item pressed");
+                edit = preferences.edit();
                 if (theme == THEME_DEFAULT) {
                     changeTheme(this, THEME_USER);
+                    edit.putInt("theme", THEME_USER);
                 } else {
                     changeTheme(this, THEME_DEFAULT);
+                    edit.putInt("theme", THEME_DEFAULT);
                 }
-
+                edit.apply();
+                edit.commit();
                 return true;
             }
             default: {
