@@ -4,5 +4,7 @@
     <style name="AppTheme" parent="android:Theme.Holo">
         <!-- Customize your theme here. -->
     </style>
+    <style name="UserTheme" parent="android:Theme.Holo.Light.DarkActionBar">
 
+    </style>
 </resources>

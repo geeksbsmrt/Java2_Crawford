@@ -14,6 +14,7 @@ import android.os.Messenger;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.adamcrawford.actionbar.data.DataStorage;
@@ -47,10 +48,14 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     static String absPath;
     public static Boolean isConnected;
     private MainActivityFragment maf;
+    private static final int THEME_DEFAULT = R.style.AppTheme;
+    private static final int THEME_USER = R.style.UserTheme;
+    private static int theme = THEME_DEFAULT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.applyTheme(this);
         setContentView(R.layout.fragment_main_activity);
 
         maf = (MainActivityFragment) getFragmentManager().findFragmentById(R.id.MainActivityFragment);
@@ -213,5 +218,47 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_actions, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search: {
+                //TODO Search Action
+                Log.i(TAG, "Search Action Item pressed");
+
+                return true;
+            }
+            case R.id.action_favorite: {
+                //TODO Favorite Action
+                Log.i(TAG, "Fav Action Item pressed");
+
+                return true;
+            }
+            case R.id.action_prefs: {
+                //TODO Preferences Action
+                Log.i(TAG, "Prefs Action Item pressed");
+                if (theme == THEME_DEFAULT) {
+                    changeTheme(this, THEME_USER);
+                } else {
+                    changeTheme(this, THEME_DEFAULT);
+                }
+
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
+    }
+
+    private void changeTheme(Activity act, int newTheme){
+        act.finish();
+        theme = newTheme;
+        act.startActivity(new Intent(act, act.getClass()));
+    }
+
+    private void applyTheme(Activity act) {
+        act.setTheme(theme);
     }
 }
