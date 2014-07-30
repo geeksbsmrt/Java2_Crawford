@@ -25,6 +25,7 @@ import com.adamcrawford.actionbar.toon.ToonConstructor;
 import com.adamcrawford.actionbar.toon.ToonDetail;
 import com.adamcrawford.actionbar.toon.ToonDetailFragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,17 +51,17 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     static String absPath;
     public static Boolean isConnected;
     private MainActivityFragment maf;
-    public static final int THEME_DEFAULT = R.style.AppTheme;
-    public static final int THEME_USER = R.style.UserTheme;
-    public static int theme = THEME_DEFAULT;
+    public static final int THEME_DARK = R.style.AppTheme;
+    public static final int THEME_LIGHT = R.style.UserTheme;
+    public static int theme = THEME_DARK;
     private SharedPreferences preferences;
-    private SharedPreferences.Editor edit;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //TODO Pull UserPreference theme, if it exists
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        theme = preferences.getInt("theme", THEME_DEFAULT);
+        theme = preferences.getInt("theme", THEME_DARK);
         this.applyTheme(this);
         setContentView(R.layout.fragment_main_activity);
 
@@ -111,6 +112,30 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         try {
             JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
             maf.writeList(jsonFromFile, context);
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    private void filterFile(String fName, String filter) {
+        Log.i(TAG, "In filterFile");
+        try {
+            JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
+            JSONArray toonArray = jsonFromFile.getJSONArray("members");
+            JSONArray filteredArray = new JSONArray();
+            JSONObject filteredJSON = new JSONObject();
+            for (int i = 0; i < toonArray.length(); i++) {
+                JSONObject toon = toonArray.getJSONObject(i);
+                JSONObject character = toon.getJSONObject("character");
+                if (character.getString("name").toLowerCase().contains(filter.toLowerCase())){
+                    filteredArray.put(toonArray.getJSONObject(i));
+                }
+            }
+            filteredJSON.put("members", filteredArray);
+            Log.e(TAG, "ToonArray: " + toonArray.toString());
+            Log.e(TAG, "Filtered JSON: " + filteredJSON.toString());
+
+            maf.writeList(filteredJSON, context);
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -232,7 +257,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             case R.id.action_search: {
                 //TODO Search Action
                 Log.i(TAG, "Search Action Item pressed");
-
+                filterFile("Llane_Remnants of Sanity", "A");
                 return true;
             }
             case R.id.action_favorite: {
@@ -244,16 +269,17 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             case R.id.action_prefs: {
                 //TODO Preferences Action
                 Log.i(TAG, "Prefs Action Item pressed");
-                edit = preferences.edit();
-                if (theme == THEME_DEFAULT) {
-                    changeTheme(this, THEME_USER);
-                    edit.putInt("theme", THEME_USER);
+                SharedPreferences.Editor edit = preferences.edit();
+                if (theme == THEME_DARK) {
+                    Log.i(TAG, "Setting them to User");
+                    changeTheme(this, THEME_LIGHT);
+                    edit.putInt("theme", THEME_LIGHT);
                 } else {
-                    changeTheme(this, THEME_DEFAULT);
-                    edit.putInt("theme", THEME_DEFAULT);
+                    Log.i(TAG, "Setting theme to Default");
+                    changeTheme(this, THEME_DARK);
+                    edit.putInt("theme", THEME_DARK);
                 }
                 edit.apply();
-                edit.commit();
                 return true;
             }
             default: {
