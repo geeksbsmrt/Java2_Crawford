@@ -1,7 +1,11 @@
 package com.adamcrawford.actionbar;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -14,9 +18,11 @@ import android.os.Message;
 import android.os.Messenger;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.adamcrawford.actionbar.data.DataStorage;
@@ -50,13 +56,14 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     static File storedFile;
     static String absPath;
     public static Boolean isConnected;
-    private MainActivityFragment maf;
+    private static MainActivityFragment maf;
     public static final int THEME_DARK = R.style.AppTheme;
     public static final int THEME_LIGHT = R.style.UserTheme;
     public static int theme = THEME_DARK;
-    private SharedPreferences preferences;
+    public static SharedPreferences preferences;
     public static String rName;
     public static String gName;
+    public static String fName;
 
     public static String getrName() {
         return rName;
@@ -86,14 +93,13 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
 
     public void processData() {
         // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a rName and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
-        String fName = rName + "_" + gName;
+        fName = rName + "_" + gName;
 
         env = Environment.getDataDirectory();
         fPath = String.format("%s/data/%s/files/%s", env, this.getPackageName(), fName.toLowerCase());
         storedFile = new File(fPath);
         absPath = String.format("Reading File: %s", storedFile.getAbsolutePath());
         if (getStatus(this)) {
-            // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a rName and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
             getData(gName.replace(" ", "%20").toLowerCase(), rName);
         } else {
             //Throw not connected message
@@ -131,10 +137,10 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         }
     }
 
-    private void filterFile(String fName, String filter) {
+    public static void filterFile(String fName, String filter) {
         Log.i(TAG, "In filterFile");
         try {
-            JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, context));
+            JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, sContext));
             JSONArray toonArray = jsonFromFile.getJSONArray("members");
             JSONArray filteredArray = new JSONArray();
             JSONObject filteredJSON = new JSONObject();
@@ -149,7 +155,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             Log.e(TAG, "ToonArray: " + toonArray.toString());
             Log.e(TAG, "Filtered JSON: " + filteredJSON.toString());
 
-            maf.writeList(filteredJSON, context);
+            maf.writeList(filteredJSON, sContext);
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -272,7 +278,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             case R.id.action_search: {
                 //TODO Search Action
                 Log.i(TAG, "Search Action Item pressed");
-                filterFile(rName + "_" + gName, "A");
+                launchDialog(Dialogs.DialogType.SEARCH);
                 return true;
             }
             case R.id.action_favorite: {
@@ -311,5 +317,65 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
 
     private void applyTheme(Activity act) {
         act.setTheme(theme);
+    }
+
+    private void launchDialog(Dialogs.DialogType dType){
+        Dialogs dialog = Dialogs.newInstance(dType);
+        dialog.show(getFragmentManager(), "search");
+    }
+
+    public static class Dialogs extends DialogFragment {
+        private String TAG = "Dialogs";
+        public enum DialogType {
+            PREFERENCES,
+            SEARCH
+        }
+
+        public static DialogType type;
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            final LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            switch (type){
+                case PREFERENCES:{
+                    Log.i(TAG, "In Preferences");
+
+                    break;
+                }
+                case SEARCH:{
+                    Log.i(TAG, "In Search");
+                    builder.setView(inflater.inflate(R.layout.search_dialog, null))
+                            .setPositiveButton(R.string.search, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Dialog dialog = Dialogs.this.getDialog();
+                                    EditText input = (EditText) dialog.findViewById(R.id.searchInput);
+                                    String query = input.getText().toString();
+                                    if (!input.getText().toString().equals("")) {
+                                        filterFile(fName, query);
+                                    }
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Dialogs.this.getDialog().cancel();
+                                }
+                            });
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            return builder.create();
+        }
+
+        public static Dialogs newInstance(DialogType dType){
+            type = dType;
+            return new Dialogs();
+        }
     }
 }
