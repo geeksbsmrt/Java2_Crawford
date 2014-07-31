@@ -55,6 +55,16 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     public static final int THEME_LIGHT = R.style.UserTheme;
     public static int theme = THEME_DARK;
     private SharedPreferences preferences;
+    public static String rName;
+    public static String gName;
+
+    public static String getrName() {
+        return rName;
+    }
+
+    public static String getgName() {
+        return gName;
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +73,10 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         theme = preferences.getInt("theme", THEME_DARK);
         this.applyTheme(this);
+
+        rName = preferences.getString("realm", "Llane");
+        gName = preferences.getString("guild", "Remnants of Sanity");
+
         setContentView(R.layout.fragment_main_activity);
 
         maf = (MainActivityFragment) getFragmentManager().findFragmentById(R.id.MainActivityFragment);
@@ -71,16 +85,16 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     }
 
     public void processData() {
-        // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
-        String fName = "Llane_Remnants of Sanity";
+        // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a rName and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
+        String fName = rName + "_" + gName;
 
         env = Environment.getDataDirectory();
         fPath = String.format("%s/data/%s/files/%s", env, this.getPackageName(), fName.toLowerCase());
         storedFile = new File(fPath);
         absPath = String.format("Reading File: %s", storedFile.getAbsolutePath());
         if (getStatus(this)) {
-            // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a realm and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
-            getData("remnants%20of%20sanity");
+            // This string is static set for a guild that exists.  Future functionality of this application will allow the user to select a rName and guild name.  Week 1, "Services" has some of this functionality.  Since it is unnecessary for this assignment, it was removed.
+            getData(gName.replace(" ", "%20").toLowerCase(), rName);
         } else {
             //Throw not connected message
             Log.i(TAG, "You are not connected");
@@ -150,9 +164,10 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         error.show();
     }
 
-    public void getData(String guild) {
+    public void getData(String guild, String realm) {
         Intent getJSON = new Intent(this, SyncService.class);
         getJSON.putExtra("guild", guild);
+        getJSON.putExtra("realm", realm);
         final DataHandler handler = new DataHandler(this);
 
         Messenger msgr = new Messenger(handler);
@@ -257,7 +272,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             case R.id.action_search: {
                 //TODO Search Action
                 Log.i(TAG, "Search Action Item pressed");
-                filterFile("Llane_Remnants of Sanity", "A");
+                filterFile(rName + "_" + gName, "A");
                 return true;
             }
             case R.id.action_favorite: {

@@ -39,15 +39,16 @@ public class SyncService extends IntentService {
 
         Bundle extras = intent.getExtras();
         String guild = extras.getString("guild");
-        JSONObject members = getData(guild);
+        String rName = extras.getString("realm");
+        JSONObject members = getData(guild, rName);
         Messenger msgr = (Messenger) extras.get("msgr");
         Message msg = Message.obtain();
 
         if (members != null) {
             try {
                 String gName = members.getString("name");
-                String rName = members.getString("realm");
-                String fName = String.format("%s_%s", rName, gName).toLowerCase();
+                String realm = members.getString("realm");
+                String fName = String.format("%s_%s", realm, gName).toLowerCase();
                 DataStorage.getInstance().writeFile(fName, members.toString(), this);
                 msg.arg1 = MainActivity.RESULT_OK;
                 msg.obj = fName;
@@ -63,7 +64,7 @@ public class SyncService extends IntentService {
         }
     }
 
-    private JSONObject getData(String guildName) {
+    private JSONObject getData(String guildName, String realmName) {
         JSONObject members = null;
         URL url;
         StringBuffer contentBuffer = null;
@@ -71,7 +72,7 @@ public class SyncService extends IntentService {
 
         try {
             //build URL from user inputs
-            String loc = "https://us.battle.net/api/wow/guild/llane/" + guildName + "?fields=members";
+            String loc = "https://us.battle.net/api/wow/guild/" + realmName+ "/" + guildName + "?fields=members";
             url = new URL(loc);
 
             //create connection

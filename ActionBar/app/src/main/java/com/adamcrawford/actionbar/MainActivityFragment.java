@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.adamcrawford.actionbar.toon.ToonAdapter;
 import com.adamcrawford.actionbar.toon.ToonConstructor;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 public class MainActivityFragment extends Fragment {
     String TAG = "MAF";
     public ListView charList;
+    public TextView realmName;
+    public TextView guildName;
     ArrayList<ToonConstructor> toonNames;
 
     public interface OnToonSelected {
@@ -52,6 +55,12 @@ public class MainActivityFragment extends Fragment {
         View myView = inflater.inflate(R.layout.activity_main, container);
 
         charList = (ListView) myView.findViewById(R.id.charList);
+        realmName = (TextView) myView.findViewById(R.id.realm);
+        guildName = (TextView) myView.findViewById(R.id.guildName);
+
+        realmName.setText(MainActivity.getrName());
+        guildName.setText(MainActivity.getgName());
+
 
         if (savedInstanceState != null && savedInstanceState.containsKey("toonNames")) {
             if (savedInstanceState.getSerializable("toonNames") instanceof ArrayList<?>) {
