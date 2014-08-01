@@ -27,8 +27,8 @@
     <string name="action_search">Search Toons</string>
     <string name="action_favorite">Favorite Toons</string>
     <string name="action_prefs">Preferences</string>
-    <string name="realmName">RealmName</string>
-    <string name="guildName">GuildName</string>
+    <string name="realmName">Realm Name</string>
+    <string name="guildName">Guild Name</string>
     <string name="hyphen"> - </string>
     <string name="searchHint">Toon Name</string>
     <string name="search">Search</string>
@@ -38,5 +38,10 @@
     <string name="favToons">Favorite Toons</string>
     <string name="empty">No toons found</string>
     <string name="rate">0</string>
+    <string name="light">Use Light Theme</string>
+    <string name="save">Save</string>
+    <string name="defaults">Set Defaults</string>
+    <string name="noInput">Please enter both Realm and Guild</string>
+    <string name="prefs">Preferences</string>
 
 </resources>

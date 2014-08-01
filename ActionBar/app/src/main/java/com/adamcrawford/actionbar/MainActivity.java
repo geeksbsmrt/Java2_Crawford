@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -312,26 +313,13 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
                 //TODO Favorite Action
                 Log.i(TAG, "Fav Action Item pressed");
                 Log.i(TAG, DataStorage.getInstance().readFile(fName + "_favs", context));
-                //JSONObject favJSON = new JSONObject(DataStorage.getInstance().readFile(fName + "_favs", context));
                 startActivity(DataStorage.getInstance().readFile(fName + "_favs", context));
-
-                //FavActivityFragment faf = (FavActivityFragment) getFragmentManager().findFragmentById(R.id.favFrag);
                 return true;
             }
             case R.id.action_prefs: {
                 //TODO Preferences Action
                 Log.i(TAG, "Prefs Action Item pressed");
-                SharedPreferences.Editor edit = preferences.edit();
-                if (theme == THEME_DARK) {
-                    Log.i(TAG, "Setting them to User");
-                    changeTheme(this, THEME_LIGHT);
-                    edit.putInt("theme", THEME_LIGHT);
-                } else {
-                    Log.i(TAG, "Setting theme to Default");
-                    changeTheme(this, THEME_DARK);
-                    edit.putInt("theme", THEME_DARK);
-                }
-                edit.apply();
+                launchDialog(Dialogs.DialogType.PREFERENCES);
                 return true;
             }
             default: {
@@ -340,7 +328,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         }
     }
 
-    private void changeTheme(Activity act, int newTheme){
+    private static void changeTheme(Activity act, int newTheme){
         act.finish();
         theme = newTheme;
         act.startActivity(new Intent(act, act.getClass()));
@@ -372,6 +360,52 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             switch (type){
                 case PREFERENCES:{
                     Log.i(TAG, "In Preferences");
+                    View view = inflater.inflate(R.layout.prefs_dialog, null);
+                    EditText gPref = (EditText) view.findViewById(R.id.guildPref);
+                    EditText rPref = (EditText) view.findViewById(R.id.realmPref);
+                    CheckBox themeSelect = (CheckBox) view.findViewById(R.id.themeSelect);
+
+                    gPref.setText(preferences.getString("guild",""));
+                    rPref.setText(preferences.getString("realm",""));
+
+                    if (preferences.contains("theme")){
+                        if (preferences.getInt("theme", THEME_DARK) == THEME_LIGHT){
+                            themeSelect.setChecked(true);
+                        }
+                    }
+
+                    builder.setView(view)
+                            .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    SharedPreferences.Editor edit = preferences.edit();
+                                    Dialog dialog = Dialogs.this.getDialog();
+                                    EditText gPref = (EditText) dialog.findViewById(R.id.guildPref);
+                                    EditText rPref = (EditText) dialog.findViewById(R.id.realmPref);
+                                    CheckBox themePref = (CheckBox) dialog.findViewById(R.id.themeSelect);
+
+                                    if (themePref.isChecked()){
+                                        edit.putInt("theme", THEME_LIGHT);
+                                        changeTheme(getActivity(), THEME_LIGHT);
+                                    } else {
+                                        edit.putInt("theme", THEME_DARK);
+                                        changeTheme(getActivity(), THEME_DARK);
+                                    }
+                                    if (gPref.getText().toString().equals("") || rPref.getText().toString().equals("")){
+                                        printToast(getString(R.string.noInput));
+                                    } else {
+                                        edit.putString("realm", rPref.getText().toString());
+                                        edit.putString("guild", gPref.getText().toString());
+                                    }
+                                    edit.apply();
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Dialogs.this.getDialog().cancel();
+                                }
+                            }).setTitle(R.string.prefs);
 
                     break;
                 }
@@ -392,7 +426,8 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     Dialogs.this.getDialog().cancel();
                                 }
-                            });
+                            }).setTitle(R.string.action_search);
+
                     break;
                 }
                 default:
