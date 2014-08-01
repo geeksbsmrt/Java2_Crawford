@@ -1,6 +1,7 @@
 package com.adamcrawford.actionbar.favs;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,20 +21,19 @@ import com.adamcrawford.actionbar.R;
 public class FavActivity extends Activity {
     private String TAG = "FavActivity";
     FavActivityFragment faf;
-    private Boolean isLandscape;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setTheme(MainActivity.theme);
+
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Log.i(TAG, "is Landscape");
-            isLandscape = true;
-            finish();
-        } else {
-            isLandscape = false;
-        }
 
+
+           finish();
+        }
         setContentView(R.layout.fragment_favs);
 
         faf = (FavActivityFragment) getFragmentManager().findFragmentById(R.id.favFrag);
