@@ -9,6 +9,13 @@ import android.view.MenuItem;
 
 import com.adamcrawford.actionbar.MainActivity;
 import com.adamcrawford.actionbar.R;
+import com.adamcrawford.actionbar.data.DataStorage;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 
 
 /**
@@ -54,6 +61,55 @@ public class ToonDetail extends Activity {
     @Override
     public void finish() {
         Log.i(TAG, "In finsh");
+        File prefsFile = new File(MainActivity.fPath + "_favs");
+        if (tdf.toonRating != 0) {
+            JSONObject toonJSON = null;
+            JSONObject fileJSON;
+            JSONObject favJSON = new JSONObject();
+            JSONArray members;
+            try {
+                fileJSON = new JSONObject(DataStorage.getInstance().readFile(MainActivity.fName, this));
+                JSONArray fileMembers =  fileJSON.getJSONArray("members");
+                int JSONlength = fileMembers.length();
+                for (int i=0; i < JSONlength ; i++) {
+                    String memberName = fileMembers.getJSONObject(i).getJSONObject("character").getString("name");
+                    if (memberName.equals(tdf.tnName)){
+                        JSONObject test = fileMembers.getJSONObject(i).getJSONObject("character");
+                        test.put("rating", String.valueOf(tdf.toonRating));
+                        toonJSON = fileMembers.getJSONObject(i);
+                        Log.i(TAG, toonJSON.toString());
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (prefsFile.exists()){
+                Log.i(TAG, "it exists");
+                try {
+                    JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(MainActivity.fName + "_favs", this));
+                    members = jsonFromFile.getJSONArray("favs");
+                    if (toonJSON != null) {
+                        members.put(toonJSON);
+                        favJSON.put("favs", members);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                members = new JSONArray();
+                try {
+                    if (toonJSON != null) {
+                        members.put(toonJSON);
+                        favJSON.put("favs", members);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            DataStorage.getInstance().writeFile(MainActivity.fName + "_favs", favJSON.toString(), this);
+            Log.e(TAG, DataStorage.getInstance().readFile(MainActivity.fName + "_favs", this));
+        }
         if (!isLandscape) {
             Log.i(TAG, "FINISHING");
             Intent data = new Intent();
@@ -61,6 +117,7 @@ public class ToonDetail extends Activity {
             data.putExtra("name", tdf.tnName);
             setResult(RESULT_OK, data);
         }
+
         super.finish();
     }
 }

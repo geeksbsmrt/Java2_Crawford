@@ -29,6 +29,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.adamcrawford.multipleactivities.MainActivity" />
         </activity>
+        <activity android:name=".favs.FavActivity"
+            android:label="@string/favToons"
+            android:parentActivityName="com.adamcrawford.actionbar.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.adamcrawford.multipleactivities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

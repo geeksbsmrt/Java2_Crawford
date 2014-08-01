@@ -22,11 +22,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.adamcrawford.actionbar.data.DataStorage;
 import com.adamcrawford.actionbar.data.SyncService;
+import com.adamcrawford.actionbar.favs.FavActivity;
 import com.adamcrawford.actionbar.toon.ToonConstructor;
 import com.adamcrawford.actionbar.toon.ToonDetail;
 import com.adamcrawford.actionbar.toon.ToonDetailFragment;
@@ -52,7 +54,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     private Context context = this;
     public static Context sContext;
     static File env = Environment.getDataDirectory();
-    static String fPath;
+    public static String fPath;
     static File storedFile;
     static String absPath;
     public static Boolean isConnected;
@@ -140,33 +142,52 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
     public static void filterFile(String fName, String filter) {
         Log.i(TAG, "In filterFile");
         try {
-            JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, sContext));
+            final JSONObject jsonFromFile = new JSONObject(DataStorage.getInstance().readFile(fName, sContext));
             JSONArray toonArray = jsonFromFile.getJSONArray("members");
             JSONArray filteredArray = new JSONArray();
             JSONObject filteredJSON = new JSONObject();
-            for (int i = 0; i < toonArray.length(); i++) {
-                JSONObject toon = toonArray.getJSONObject(i);
-                JSONObject character = toon.getJSONObject("character");
-                if (character.getString("name").toLowerCase().contains(filter.toLowerCase())){
-                    filteredArray.put(toonArray.getJSONObject(i));
+            Boolean filled = false;
+            if (filter.equals("")){
+                maf.writeList(jsonFromFile, sContext);
+                maf.resetButton.setVisibility(View.GONE);
+            } else {
+                for (int i = 0; i < toonArray.length(); i++) {
+                    JSONObject toon = toonArray.getJSONObject(i);
+                    JSONObject character = toon.getJSONObject("character");
+                    if (character.getString("name").toLowerCase().contains(filter.toLowerCase())){
+                        filteredArray.put(toonArray.getJSONObject(i));
+                        filled = true;
+                    }
+                }
+                if (filled) {
+                    filteredJSON.put("members", filteredArray);
+                    Log.e(TAG, "ToonArray: " + toonArray.toString());
+                    Log.e(TAG, "Filtered JSON: " + filteredJSON.toString());
+                    maf.writeList(filteredJSON, sContext);
+                    maf.resetButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            maf.writeList(jsonFromFile, sContext);
+                            view.setVisibility(View.GONE);
+                        }
+                    });
+                    maf.resetButton.setVisibility(View.VISIBLE);
+                } else {
+                    String error = sContext.getString(R.string.empty);
+                    printToast(error);
                 }
             }
-            filteredJSON.put("members", filteredArray);
-            Log.e(TAG, "ToonArray: " + toonArray.toString());
-            Log.e(TAG, "Filtered JSON: " + filteredJSON.toString());
-
-            maf.writeList(filteredJSON, sContext);
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
     //method to display error to user
-    private void printToast(String message) {
+    private static void printToast(String message) {
         //set length for message to be displayed
         int duration = Toast.LENGTH_LONG;
         //create message based on input parameter then display it
-        Toast error = Toast.makeText(context, message, duration);
+        Toast error = Toast.makeText(sContext, message, duration);
         error.show();
     }
 
@@ -198,12 +219,12 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
                     Log.i(TAG, "Data stored");
                     activity.readFile(returned);
                 } else if (storedFile.exists()) {
-                    activity.printToast(res.getString(R.string.staticData));
+                    printToast(res.getString(R.string.staticData));
                     activity.readFile(returned);
                 } else {
                     Log.i(TAG, "File Not Exist");
-                    activity.printToast(res.getString(R.string.notReturned));
-                    activity.printToast(res.getString(R.string.noLocal));
+                    printToast(res.getString(R.string.notReturned));
+                    printToast(res.getString(R.string.noLocal));
                 }
             }
         }
@@ -239,6 +260,12 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
 
         Log.i(TAG, "Sending to ToonDetail");
         startActivityForResult(intent, 0);
+    }
+
+    private void startActivity(String json){
+        Intent intent = new Intent(context, FavActivity.class);
+        intent.putExtra("favs", json);
+        startActivity(intent);
     }
 
     public void onToonSelected(ToonConstructor selected, Boolean connected) {
@@ -284,7 +311,11 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
             case R.id.action_favorite: {
                 //TODO Favorite Action
                 Log.i(TAG, "Fav Action Item pressed");
+                Log.i(TAG, DataStorage.getInstance().readFile(fName + "_favs", context));
+                //JSONObject favJSON = new JSONObject(DataStorage.getInstance().readFile(fName + "_favs", context));
+                startActivity(DataStorage.getInstance().readFile(fName + "_favs", context));
 
+                //FavActivityFragment faf = (FavActivityFragment) getFragmentManager().findFragmentById(R.id.favFrag);
                 return true;
             }
             case R.id.action_prefs: {
@@ -353,9 +384,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
                                     Dialog dialog = Dialogs.this.getDialog();
                                     EditText input = (EditText) dialog.findViewById(R.id.searchInput);
                                     String query = input.getText().toString();
-                                    if (!input.getText().toString().equals("")) {
-                                        filterFile(fName, query);
-                                    }
+                                    filterFile(fName, query);
                                 }
                             })
                             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

@@ -33,5 +33,10 @@
     <string name="searchHint">Toon Name</string>
     <string name="search">Search</string>
     <string name="cancel">Cancel</string>
+    <string name="reset">Reset</string>
+    <string name="favs">Favorites: </string>
+    <string name="favToons">Favorite Toons</string>
+    <string name="empty">No toons found</string>
+    <string name="rate">0</string>
 
 </resources>

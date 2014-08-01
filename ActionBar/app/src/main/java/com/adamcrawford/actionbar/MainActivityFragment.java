@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class MainActivityFragment extends Fragment {
     public ListView charList;
     public TextView realmName;
     public TextView guildName;
+    public Button resetButton;
     ArrayList<ToonConstructor> toonNames;
 
     public interface OnToonSelected {
@@ -57,6 +59,7 @@ public class MainActivityFragment extends Fragment {
         charList = (ListView) myView.findViewById(R.id.charList);
         realmName = (TextView) myView.findViewById(R.id.realm);
         guildName = (TextView) myView.findViewById(R.id.guildName);
+        resetButton = (Button) myView.findViewById(R.id.reset);
 
         realmName.setText(MainActivity.getrName());
         guildName.setText(MainActivity.getgName());

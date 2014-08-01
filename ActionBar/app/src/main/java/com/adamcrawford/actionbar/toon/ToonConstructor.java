@@ -26,6 +26,7 @@ public class ToonConstructor implements Serializable {
     public String tnGender;
     public String toonRole;
     public String toonSpec;
+    public String toonRating;
 
 
     public enum CharClass {
@@ -131,6 +132,9 @@ public class ToonConstructor implements Serializable {
             } else {
                 this.toonRole = MainActivity.getContext().getString(R.string.none);
                 this.toonSpec = MainActivity.getContext().getString(R.string.none);
+            }
+            if (object.getJSONObject("character").has("rating")) {
+                this.toonRating = object.getJSONObject("character").getString("rating");
             }
         } catch (JSONException e) {
             e.printStackTrace();

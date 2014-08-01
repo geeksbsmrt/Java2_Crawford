@@ -11,6 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
         android:id="@+id/appDesc">
         <TextView
             android:layout_width="wrap_content"
@@ -39,13 +40,28 @@
             android:text="@string/guildName"
             android:id="@+id/guildName"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/appDesc"
+        android:orientation="vertical"
 
+        >
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/charList"
-        android:layout_below="@+id/appDesc"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_weight="1"
         android:visibility="gone"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset"
+        android:id="@+id/reset"
+        android:layout_gravity="center"
+        android:layout_weight="0"
+        android:visibility="gone"/>
+    </LinearLayout>
 
 </RelativeLayout>
