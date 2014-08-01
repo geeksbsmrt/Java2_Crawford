@@ -55,7 +55,9 @@ public class FavActivityFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            writeList(favJSON, getActivity().getApplicationContext());
+            if (favJSON != null) {
+                writeList(favJSON, getActivity().getApplicationContext());
+            }
         }
     }
 

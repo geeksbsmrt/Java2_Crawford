@@ -43,5 +43,6 @@
     <string name="defaults">Set Defaults</string>
     <string name="noInput">Please enter both Realm and Guild</string>
     <string name="prefs">Preferences</string>
+    <string name="noFave">No favorites</string>
 
 </resources>

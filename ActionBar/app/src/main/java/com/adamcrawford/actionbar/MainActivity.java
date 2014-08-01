@@ -313,7 +313,12 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
                 //TODO Favorite Action
                 Log.i(TAG, "Fav Action Item pressed");
                 Log.i(TAG, DataStorage.getInstance().readFile(fName + "_favs", context));
-                startActivity(DataStorage.getInstance().readFile(fName + "_favs", context));
+                File favFile = new File(fName+"_favs");
+                if (favFile.exists()) {
+                    startActivity(DataStorage.getInstance().readFile(fName + "_favs", context));
+                } else {
+                    printToast(getString(R.string.noFave));
+                }
                 return true;
             }
             case R.id.action_prefs: {
