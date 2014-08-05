@@ -313,7 +313,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
                 //TODO Favorite Action
                 Log.i(TAG, "Fav Action Item pressed");
                 Log.i(TAG, DataStorage.getInstance().readFile(fName + "_favs", context));
-                File favFile = new File(fName+"_favs");
+                File favFile = new File(fPath+"_favs");
                 if (favFile.exists()) {
                     startActivity(DataStorage.getInstance().readFile(fName + "_favs", context));
                 } else {
@@ -333,7 +333,7 @@ public class MainActivity extends Activity implements MainActivityFragment.OnToo
         }
     }
 
-    private static void changeTheme(Activity act, int newTheme){
+    public static void changeTheme(Activity act, int newTheme){
         act.finish();
         theme = newTheme;
         act.startActivity(new Intent(act, act.getClass()));
